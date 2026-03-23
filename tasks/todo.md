@@ -2,7 +2,7 @@
 
 **PRD Reference:** US-C04 — View Session History Dashboard
 **Branch:** `feature/session-history-dashboard`
-**Status:** Phase 1 Complete — awaiting Phase 2 approval
+**Status:** Phase 2 Complete — awaiting Phase 3 approval
 
 ---
 
@@ -41,7 +41,7 @@
 
 ### Phase 2 — Backend: Schemas
 
-- [ ] **2.1** Create `backend/app/schemas/session.py`:
+- [x] **2.1** Create `backend/app/schemas/session.py`:
   - `SessionSummary` — id, interview_type, role, status, composite_score (float | None), created_at
   - `DimensionScores` — clarity, depth, structure, relevance, communication_quality (all int 1-10)
   - `QuestionResult` — question_text, candidate_answer, ai_scores: DimensionScores, coach_scores: DimensionScores | None, feedback: dict | None

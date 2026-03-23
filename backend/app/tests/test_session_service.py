@@ -15,8 +15,8 @@ from fastapi import HTTPException
 from app.models.evaluation_score import EvaluationScore, ScoredBy
 from app.models.question import SessionQuestion
 from app.models.session import InterviewRole, InterviewType, Session, SessionStatus
-from app.schemas.session import SessionDetail, SessionHistoryResponse, TrendResponse
-from app.services.session_service import get_score_trends, get_session_detail, list_sessions
+from app.schemas.session import SessionCreateResponse, SessionDetail, SessionHistoryResponse, TrendResponse
+from app.services.session_service import create_session, get_score_trends, get_session_detail, list_sessions
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -333,3 +333,112 @@ async def test_get_score_trends_skips_sessions_with_no_scores():
 
     # Sessions with no scoreable questions are excluded from trend points
     assert len(trend.points) == 0
+
+
+# ---------------------------------------------------------------------------
+# create_session
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.asyncio
+async def test_create_session_returns_session_create_response():
+    """create_session must return a SessionCreateResponse with the required fields."""
+    user_id = uuid4()
+    db = AsyncMock()
+    db.add = MagicMock()
+    db.commit = AsyncMock()
+    db.refresh = AsyncMock()
+
+    response = await create_session(db, user_id=user_id, interview_type=InterviewType.behavioral)
+
+    assert isinstance(response, SessionCreateResponse)
+
+
+@pytest.mark.asyncio
+async def test_create_session_response_has_required_fields():
+    """SessionCreateResponse must expose session_id, status, interview_type, created_at."""
+    user_id = uuid4()
+    db = AsyncMock()
+    db.add = MagicMock()
+    db.commit = AsyncMock()
+    db.refresh = AsyncMock()
+
+    response = await create_session(db, user_id=user_id, interview_type=InterviewType.technical)
+
+    assert hasattr(response, "session_id")
+    assert hasattr(response, "status")
+    assert hasattr(response, "interview_type")
+    assert hasattr(response, "created_at")
+
+
+@pytest.mark.asyncio
+async def test_create_session_sets_status_to_created():
+    """Newly created sessions must have status=created."""
+    user_id = uuid4()
+    db = AsyncMock()
+    db.add = MagicMock()
+    db.commit = AsyncMock()
+    db.refresh = AsyncMock()
+
+    response = await create_session(db, user_id=user_id, interview_type=InterviewType.behavioral)
+
+    assert response.status == SessionStatus.created
+
+
+@pytest.mark.asyncio
+async def test_create_session_persists_interview_type():
+    """The interview_type in the response must match the one passed in."""
+    user_id = uuid4()
+    db = AsyncMock()
+    db.add = MagicMock()
+    db.commit = AsyncMock()
+    db.refresh = AsyncMock()
+
+    response = await create_session(db, user_id=user_id, interview_type=InterviewType.mixed)
+
+    assert response.interview_type == InterviewType.mixed
+
+
+@pytest.mark.asyncio
+async def test_create_session_adds_session_to_db_and_commits():
+    """create_session must call db.add and db.commit exactly once each."""
+    user_id = uuid4()
+    db = AsyncMock()
+    db.add = MagicMock()
+    db.commit = AsyncMock()
+    db.refresh = AsyncMock()
+
+    await create_session(db, user_id=user_id, interview_type=InterviewType.technical)
+
+    db.add.assert_called_once()
+    db.commit.assert_awaited_once()
+
+
+@pytest.mark.asyncio
+async def test_create_session_session_id_is_uuid():
+    """session_id in the response must be a valid UUID."""
+    from uuid import UUID
+
+    user_id = uuid4()
+    db = AsyncMock()
+    db.add = MagicMock()
+    db.commit = AsyncMock()
+    db.refresh = AsyncMock()
+
+    response = await create_session(db, user_id=user_id, interview_type=InterviewType.behavioral)
+
+    assert isinstance(response.session_id, UUID)
+
+
+@pytest.mark.asyncio
+async def test_create_session_created_at_is_datetime():
+    """created_at in the response must be a datetime instance."""
+    user_id = uuid4()
+    db = AsyncMock()
+    db.add = MagicMock()
+    db.commit = AsyncMock()
+    db.refresh = AsyncMock()
+
+    response = await create_session(db, user_id=user_id, interview_type=InterviewType.behavioral)
+
+    assert isinstance(response.created_at, datetime)

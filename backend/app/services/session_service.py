@@ -10,7 +10,7 @@ from sqlalchemy.orm import selectinload
 from app.agents import answer_evaluation, feedback_synthesis, question_generation
 from app.models.evaluation_score import EvaluationScore, ScoredBy
 from app.models.question import Question, SessionQuestion
-from app.models.session import Session, SessionStatus
+from app.models.session import InterviewRole, InterviewType, Session, SessionStatus
 from app.schemas.session import (
     AnswerFeedbackResponse,
     CreateSessionRequest,
@@ -18,6 +18,7 @@ from app.schemas.session import (
     DimensionScores,
     QuestionInSession,
     QuestionResult,
+    SessionCreateResponse,
     SessionCreatedResponse,
     SessionDetail,
     SessionHistoryResponse,
@@ -198,6 +199,32 @@ async def get_score_trends(
 
 
 async def create_session(
+    db: AsyncSession, user_id: UUID, interview_type: InterviewType
+) -> SessionCreateResponse:
+    """Create a bare session record and return its identity. No AI calls."""
+    from uuid import uuid4
+
+    now = datetime.now(timezone.utc)
+    session = Session(
+        id=uuid4(),
+        candidate_id=user_id,
+        interview_type=interview_type,
+        role=InterviewRole.SWE,
+        status=SessionStatus.created,
+        created_at=now,
+    )
+    db.add(session)
+    await db.commit()
+    await db.refresh(session)
+    return SessionCreateResponse(
+        session_id=session.id,
+        status=session.status,
+        interview_type=session.interview_type,
+        created_at=session.created_at,
+    )
+
+
+async def create_session_with_questions(
     db: AsyncSession, candidate_id: UUID, request: CreateSessionRequest
 ) -> SessionCreatedResponse:
     """Generate questions via AI and create a new session in in_progress state."""

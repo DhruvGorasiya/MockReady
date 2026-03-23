@@ -10,6 +10,7 @@ from app.models.user import User
 from app.schemas.session import (
     AnswerFeedbackResponse,
     CreateSessionRequest,
+    SessionCreateResponse,
     SessionCreatedResponse,
     SessionDetail,
     SessionHistoryResponse,
@@ -21,13 +22,15 @@ from app.services import session_service
 router = APIRouter(prefix="/sessions", tags=["sessions"])
 
 
-@router.post("", response_model=SessionCreatedResponse, status_code=201)
+@router.post("", response_model=SessionCreateResponse, status_code=201)
 async def create_session(
     body: CreateSessionRequest,
     current_user: Annotated[User, Depends(get_current_user)],
     db: Annotated[AsyncSession, Depends(get_db)],
-) -> SessionCreatedResponse:
-    return await session_service.create_session(db, candidate_id=current_user.id, request=body)
+) -> SessionCreateResponse:
+    return await session_service.create_session(
+        db, user_id=current_user.id, interview_type=body.interview_type
+    )
 
 
 @router.post(

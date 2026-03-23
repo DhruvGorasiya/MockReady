@@ -12,6 +12,7 @@ class InterviewType(str, enum.Enum):
     behavioral = "behavioral"
     technical = "technical"
     system_design = "system_design"
+    mixed = "mixed"
 
 
 class InterviewRole(str, enum.Enum):

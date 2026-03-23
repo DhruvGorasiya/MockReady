@@ -57,6 +57,13 @@ class TrendResponse(BaseModel):
     points: list[TrendPoint]
 
 
+class SessionCreateResponse(BaseModel):
+    session_id: UUID
+    status: SessionStatus
+    interview_type: InterviewType
+    created_at: datetime
+
+
 # --- Session creation ---
 
 

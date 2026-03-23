@@ -36,12 +36,12 @@ Candidates preparing for technical interviews have no reliable signal on whether
 
 ### Why Existing Tools Fail
 
-| Tool | What It Does | What It Misses |
-|---|---|---|
-| Leetcode | Correctness grading | Explanation quality, communication, reasoning transparency |
-| ChatGPT | Answers questions, explains solutions | No adversarial coaching, no dimensional scoring, not realistic |
-| Pramp | Peer mock interviews | Awkward pairing with strangers, scheduling friction, no structured feedback |
-| Interviewing.io | Professional mock interviews | Expensive, inaccessible for students |
+| Tool            | What It Does                          | What It Misses                                                              |
+| --------------- | ------------------------------------- | --------------------------------------------------------------------------- |
+| Leetcode        | Correctness grading                   | Explanation quality, communication, reasoning transparency                  |
+| ChatGPT         | Answers questions, explains solutions | No adversarial coaching, no dimensional scoring, not realistic              |
+| Pramp           | Peer mock interviews                  | Awkward pairing with strangers, scheduling friction, no structured feedback |
+| Interviewing.io | Professional mock interviews          | Expensive, inaccessible for students                                        |
 
 ### The Specific Pain Points (Mom Test Validated)
 
@@ -61,22 +61,26 @@ Candidates preparing for technical interviews have no reliable signal on whether
 ### Key Validated Findings
 
 **On preparation habits:**
+
 - Prep is reactive and unstructured. Candidates rely on vibes, not systems.
 - Tools like Pramp exist but create friction (peer awkwardness, cost, scheduling).
 - The candidate had never done a full mock interview outside a classroom setting despite active job hunting.
 
 **On feedback:**
+
 - Companies give no actionable post-interview feedback.
 - Human mentor feedback (when specific and behavioral) is highly valued.
 - Candidates can self-assess dimensions like communication and clarity when prompted, but never do it naturally on their own.
 - The "silence-while-thinking" behavior is a specific, known, and damaging pattern that candidates cannot fix without targeted feedback.
 
 **On existing AI tools:**
+
 - ChatGPT explanations are valued for interactivity but lack adversarial coaching.
 - Typing answers to ChatGPT is not a realistic proxy for speaking under interview pressure.
 - Binary pass/fail from Leetcode tells candidates nothing about readiness.
 
 **Strongest validated quote:**
+
 > "If it told me something I could not already tell myself — like your explanations are consistently unclear in the first 30 seconds, and here is what you should say instead — that is actionable. Generic feedback like 'good communication' is useless."
 
 **Retention trigger identified:** Feedback must be specific, actionable, and not replicable through self-assessment alone.
@@ -90,6 +94,7 @@ MockReady is an AI-powered interview preparation platform that simulates realist
 **One-line pitch:** Practice interviews with an AI that coaches like a mentor, not a grading rubric.
 
 **What makes MockReady different:**
+
 - Dimensional scoring across clarity, depth, structure, relevance, and communication quality — not binary pass/fail.
 - Adversarial coaching: the AI pushes back, asks follow-up questions, and flags weak spots mid-session.
 - Coaches can audit and override AI scores, creating a feedback loop that improves the system over time.
@@ -135,6 +140,7 @@ MockReady is an AI-powered interview preparation platform that simulates realist
 > As a Candidate, I want to select an interview type (behavioral, technical, system design) and a target role (SWE, PM, DS) so that I get questions relevant to my specific interview context.
 
 **Acceptance Criteria:**
+
 - [ ] Candidate can select from at least 3 interview types: behavioral, technical, system design.
 - [ ] Candidate can select from at least 3 roles: SWE, PM, Data Science.
 - [ ] Selection combination (e.g., "SWE + Technical") is passed to the Question Generation Agent as context.
@@ -148,6 +154,7 @@ MockReady is an AI-powered interview preparation platform that simulates realist
 > As a Candidate, I want to answer interview questions in a timed, realistic session so that I practice under conditions that resemble a real interview.
 
 **Acceptance Criteria:**
+
 - [ ] Session presents one question at a time with a visible countdown timer.
 - [ ] Candidate submits a text response per question (voice input is out of scope for v1).
 - [ ] AI may ask one follow-up question per answer to simulate real interviewer behavior.
@@ -162,6 +169,7 @@ MockReady is an AI-powered interview preparation platform that simulates realist
 > As a Candidate, I want to receive real-time AI evaluation of my responses with scores across multiple dimensions so that I know specifically where to improve.
 
 **Acceptance Criteria:**
+
 - [ ] Each response is scored on exactly 5 dimensions: Clarity, Depth, Structure, Relevance, Communication Quality.
 - [ ] Each dimension is scored on a 1-10 integer scale.
 - [ ] Each dimension score is accompanied by a 1-3 sentence behavioral explanation (not generic praise).
@@ -176,6 +184,7 @@ MockReady is an AI-powered interview preparation platform that simulates realist
 > As a Candidate, I want a session history dashboard that shows my scores over time so that I can track real improvement across practice sessions.
 
 **Acceptance Criteria:**
+
 - [ ] Dashboard shows all past sessions with date, interview type, role, and composite score.
 - [ ] Per-session view shows dimension-level scores for each question.
 - [ ] Trend chart shows composite score over time (minimum last 10 sessions).
@@ -190,6 +199,7 @@ MockReady is an AI-powered interview preparation platform that simulates realist
 > As a Candidate, I want to review detailed feedback for each question in a past session so that I can study what I did wrong and how to improve.
 
 **Acceptance Criteria:**
+
 - [ ] Each question in a session review shows: the original question, the candidate's answer, all 5 dimension scores, and the behavioral feedback per dimension.
 - [ ] If a Coach has overridden a score, both the AI score and the Coach score are visible, with the Coach score marked as authoritative.
 - [ ] Coach written commentary is displayed if present.
@@ -206,6 +216,7 @@ MockReady is an AI-powered interview preparation platform that simulates realist
 > As a Coach, I want to see a queue of AI-scored sessions assigned to me for review so that I can audit AI judgments efficiently.
 
 **Acceptance Criteria:**
+
 - [ ] Coach dashboard shows all sessions pending review, sorted by submission date.
 - [ ] Each session in the queue shows: candidate name (or anonymized ID), interview type, role, composite AI score, and submission timestamp.
 - [ ] Coach can open any session for detailed review.
@@ -218,6 +229,7 @@ MockReady is an AI-powered interview preparation platform that simulates realist
 > As a Coach, I want to override individual dimension scores on a session so that the system learns from my judgment where the AI was wrong.
 
 **Acceptance Criteria:**
+
 - [ ] For each question in a session, Coach can override any or all of the 5 dimension scores.
 - [ ] Override UI shows the AI score alongside the Coach input field.
 - [ ] Coach must provide a written justification for each override (minimum 10 characters).
@@ -232,6 +244,7 @@ MockReady is an AI-powered interview preparation platform that simulates realist
 > As a Coach, I want to add session-level written commentary so that the candidate receives qualitative feedback beyond score overrides.
 
 **Acceptance Criteria:**
+
 - [ ] Coach can add a free-text comment at the session level (not just per question).
 - [ ] Comment is visible to the candidate in their session review.
 - [ ] Comment supports a minimum of 1000 characters.
@@ -248,6 +261,7 @@ MockReady is an AI-powered interview preparation platform that simulates realist
 > As an Admin, I want to add, edit, and deactivate questions in the question bank so that the platform always has high-quality, relevant questions available.
 
 **Acceptance Criteria:**
+
 - [ ] Admin can create a question with: text, interview type, role, difficulty (easy/medium/hard), and tags.
 - [ ] Admin can edit any field of an existing question.
 - [ ] Admin can deactivate a question so it is no longer surfaced by the Question Generation Agent.
@@ -261,6 +275,7 @@ MockReady is an AI-powered interview preparation platform that simulates realist
 > As an Admin, I want an Evaluation Dashboard that tracks AI scoring accuracy against Coach overrides so that I can monitor evaluation quality over time.
 
 **Acceptance Criteria:**
+
 - [ ] Dashboard shows: total sessions scored, total sessions reviewed by Coach, overall AI-Coach agreement rate (%), average score delta per dimension, and trend of agreement rate over time.
 - [ ] Agreement rate is calculated per dimension and as an overall composite.
 - [ ] Score drift (change in AI scoring patterns over time) is tracked and visualized.
@@ -275,6 +290,7 @@ MockReady is an AI-powered interview preparation platform that simulates realist
 > As an Admin, I want to configure dimension weights per role so that the scoring reflects what actually matters for each role.
 
 **Acceptance Criteria:**
+
 - [ ] Admin can set a weight (0-100%) for each of the 5 dimensions per role.
 - [ ] Weights per role must sum to 100%.
 - [ ] Changes to weights apply to new sessions only, not retroactively.
@@ -381,6 +397,7 @@ MockReady is an AI-powered interview preparation platform that simulates realist
 
 **Trigger:** Session start  
 **Inputs:**
+
 - `interviewType`: behavioral | technical | system_design
 - `role`: SWE | PM | DS
 - `difficulty`: easy | medium | hard (set by candidate or defaulted to medium)
@@ -388,9 +405,11 @@ MockReady is an AI-powered interview preparation platform that simulates realist
 - `excludeQuestionIds`: list of previously seen question IDs for this candidate
 
 **Outputs:**
+
 - Array of question objects: `{ id, text, interviewType, role, difficulty, tags }`
 
 **Behavior:**
+
 - Generates questions dynamically using Claude, grounded by the active question bank.
 - Does not repeat questions the candidate has seen in the last 5 sessions.
 - Questions are logged and stored, not ephemeral.
@@ -403,6 +422,7 @@ MockReady is an AI-powered interview preparation platform that simulates realist
 
 **Trigger:** Candidate submits an answer  
 **Inputs:**
+
 - `question`: full question text
 - `answer`: candidate's submitted text
 - `interviewType`: behavioral | technical | system_design
@@ -410,10 +430,12 @@ MockReady is an AI-powered interview preparation platform that simulates realist
 - `rubric`: active rubric config (dimension weights)
 
 **Outputs:**
+
 - `scores`: `{ clarity: int, depth: int, structure: int, relevance: int, communicationQuality: int }`
 - `reasoning`: `{ [dimension]: string }` — one sentence of reasoning per dimension
 
 **Behavior:**
+
 - Scores each dimension independently using a structured prompt.
 - Reasoning must reference specific content from the candidate's answer.
 - Must not score based on correctness alone. Communication quality and structure are evaluated regardless of answer correctness.
@@ -426,6 +448,7 @@ MockReady is an AI-powered interview preparation platform that simulates realist
 
 **Trigger:** Answer Evaluation Agent completes  
 **Inputs:**
+
 - `question`: full question text
 - `answer`: candidate's submitted text
 - `scores`: output from Answer Evaluation Agent
@@ -433,11 +456,13 @@ MockReady is an AI-powered interview preparation platform that simulates realist
 - `interviewType`, `role`
 
 **Outputs:**
+
 - `feedbackSummary`: 2-3 sentence overall summary of the answer
 - `dimensionFeedback`: `{ [dimension]: string }` — 1-3 sentences of specific, behavioral, actionable feedback per dimension
 - `improvementSuggestion`: one concrete action the candidate can take immediately
 
 **Behavior:**
+
 - Feedback must be behavioral and specific. It must reference what the candidate said or did not say.
 - Must not produce generic phrases like "good job" or "needs improvement" without behavioral grounding.
 - `improvementSuggestion` must be a single, specific, actionable sentence.
@@ -473,17 +498,18 @@ Score ownership: ai_score (initial), coach_score (override, authoritative if pre
 
 ### 9.3 Metrics Tracked
 
-| Metric | Description |
-|---|---|
-| Agreement Rate | % of dimensions where AI score matches Coach score (within ±1 point) |
-| Average Score Delta | Mean absolute difference between AI and Coach scores per dimension |
-| Score Drift | Rolling average of AI scores over time per dimension, tracked for trends |
-| Judgment Confidence | Average LLM-as-judge confidence score over time |
-| Override Rate | % of sessions that receive at least one Coach override |
+| Metric              | Description                                                              |
+| ------------------- | ------------------------------------------------------------------------ |
+| Agreement Rate      | % of dimensions where AI score matches Coach score (within ±1 point)     |
+| Average Score Delta | Mean absolute difference between AI and Coach scores per dimension       |
+| Score Drift         | Rolling average of AI scores over time per dimension, tracked for trends |
+| Judgment Confidence | Average LLM-as-judge confidence score over time                          |
+| Override Rate       | % of sessions that receive at least one Coach override                   |
 
 ### 9.4 Ground Truth Data Model
 
 Every Coach override becomes a labeled training example:
+
 - Input: question + answer
 - Label: Coach score + justification
 - Context: AI score + AI reasoning
@@ -495,6 +521,7 @@ This data is queryable for future fine-tuning or few-shot prompt calibration.
 ## 10. Data Models
 
 ### User
+
 ```
 id: uuid (PK)
 email: string (unique)
@@ -505,6 +532,7 @@ updatedAt: timestamp
 ```
 
 ### Session
+
 ```
 id: uuid (PK)
 candidateId: uuid (FK -> User)
@@ -518,6 +546,7 @@ createdAt: timestamp
 ```
 
 ### Question
+
 ```
 id: uuid (PK)
 text: string
@@ -531,6 +560,7 @@ updatedAt: timestamp
 ```
 
 ### SessionQuestion
+
 ```
 id: uuid (PK)
 sessionId: uuid (FK -> Session)
@@ -542,6 +572,7 @@ submittedAt: timestamp
 ```
 
 ### EvaluationScore
+
 ```
 id: uuid (PK)
 sessionQuestionId: uuid (FK -> SessionQuestion)
@@ -559,6 +590,7 @@ createdAt: timestamp
 ```
 
 ### AgentLog
+
 ```
 id: uuid (PK)
 agentId: string
@@ -574,6 +606,7 @@ createdAt: timestamp
 ```
 
 ### EvalJudgment
+
 ```
 id: uuid (PK)
 sessionQuestionId: uuid (FK -> SessionQuestion)
@@ -587,6 +620,7 @@ createdAt: timestamp
 ```
 
 ### RubricVersion
+
 ```
 id: uuid (PK)
 role: enum
@@ -602,6 +636,7 @@ createdAt: timestamp
 All endpoints prefixed with `/api/v1`. All requests require `Authorization: Bearer <token>` except auth routes.
 
 ### Auth
+
 ```
 POST   /auth/register
 POST   /auth/login
@@ -610,6 +645,7 @@ GET    /auth/me
 ```
 
 ### Sessions
+
 ```
 POST   /sessions                        # Create new session (candidate)
 GET    /sessions/:id                    # Get session details
@@ -620,6 +656,7 @@ GET    /sessions/:id/feedback           # Get full session feedback
 ```
 
 ### Coach
+
 ```
 GET    /coach/queue                     # Get review queue
 GET    /coach/sessions/:id              # Get session for review
@@ -629,6 +666,7 @@ PATCH  /coach/sessions/:id/complete    # Mark review as complete
 ```
 
 ### Admin
+
 ```
 GET    /admin/questions                 # List questions
 POST   /admin/questions                 # Create question
@@ -641,6 +679,7 @@ GET    /admin/evals/judgments           # List LLM-as-judge records
 ```
 
 ### Health
+
 ```
 GET    /health                          # Liveness check (no auth required)
 ```
@@ -693,29 +732,29 @@ GET    /health                          # Liveness check (no auth required)
 
 ## 14. Success Metrics
 
-| Metric | Target (End of v1) |
-|---|---|
-| Session completion rate | > 70% of started sessions completed |
-| Candidate NPS (informal) | Positive sentiment in demo feedback |
-| AI-Coach agreement rate | > 75% within ±1 point per dimension |
-| Agent latency p95 | < 10 seconds per answer evaluation |
+| Metric                        | Target (End of v1)                       |
+| ----------------------------- | ---------------------------------------- |
+| Session completion rate       | > 70% of started sessions completed      |
+| Candidate NPS (informal)      | Positive sentiment in demo feedback      |
+| AI-Coach agreement rate       | > 75% within ±1 point per dimension      |
+| Agent latency p95             | < 10 seconds per answer evaluation       |
 | Evaluation Dashboard coverage | 100% of Coach-reviewed sessions included |
-| Test coverage | > 80% on all core service modules |
+| Test coverage                 | > 80% on all core service modules        |
 
 ---
 
 ## 15. Open Questions
 
-| # | Question | Owner | Status |
-|---|---|---|---|
-| 1 | Final tech stack: framework, database, hosting provider? | Xuan + Dhruv | Open — Sprint 1 |
-| 2 | Monolith vs microservices decision? | Xuan + Dhruv | Open — Sprint 1 |
-| 3 | Which deployment platform: Render, Railway, AWS? | Xuan + Dhruv | Open — Sprint 1 |
-| 4 | Should follow-up questions be generated dynamically or templated? | Xuan + Dhruv | Open — Sprint 1 |
-| 5 | How are Coach assignments made — manual, round-robin, or self-select? | Xuan + Dhruv | Open — Sprint 1 |
-| 6 | Is the question bank seeded manually or via AI generation at launch? | Xuan + Dhruv | Open — Sprint 1 |
-| 7 | What caching layer? Redis vs in-memory? | Xuan + Dhruv | Open — Sprint 1 |
+| #   | Question                                                              | Owner        | Status                                                              |
+| --- | --------------------------------------------------------------------- | ------------ | ------------------------------------------------------------------- |
+| 1   | Final tech stack: framework, database, hosting provider?              | Xuan + Dhruv | **Decided: Next.js + FastAPI + Supabase (PostgreSQL) + SQLAlchemy** |
+| 2   | Monolith vs microservices decision?                                   | Xuan + Dhruv | Open — Sprint 1                                                     |
+| 3   | Which deployment platform: Render, Railway, AWS?                      | Xuan + Dhruv | Open — Sprint 1                                                     |
+| 4   | Should follow-up questions be generated dynamically or templated?     | Xuan + Dhruv | Open — Sprint 1                                                     |
+| 5   | How are Coach assignments made — manual, round-robin, or self-select? | Xuan + Dhruv | Open — Sprint 1                                                     |
+| 6   | Is the question bank seeded manually or via AI generation at launch?  | Xuan + Dhruv | Open — Sprint 1                                                     |
+| 7   | What caching layer? Redis vs in-memory?                               | Xuan + Dhruv | Open — Sprint 1                                                     |
 
 ---
 
-*This PRD is a living document. Update it as architectural decisions are made in sprint planning. Claude Code should treat this as the authoritative source of truth for feature requirements.*
+_This PRD is a living document. Update it as architectural decisions are made in sprint planning. Claude Code should treat this as the authoritative source of truth for feature requirements._

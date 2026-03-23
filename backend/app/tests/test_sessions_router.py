@@ -100,18 +100,23 @@ def authed_client():
 # ---------------------------------------------------------------------------
 
 def test_get_history_requires_auth(client):
-    # FastAPI HTTPBearer returns 401 (not 403) when Authorization header is absent
-    response = client.get("/api/v1/sessions/history")
+    with patch("app.core.security.settings") as mock_settings:
+        mock_settings.dev_bypass_auth = False
+        response = client.get("/api/v1/sessions/history")
     assert response.status_code == 401
 
 
 def test_get_trends_requires_auth(client):
-    response = client.get("/api/v1/sessions/trends")
+    with patch("app.core.security.settings") as mock_settings:
+        mock_settings.dev_bypass_auth = False
+        response = client.get("/api/v1/sessions/trends")
     assert response.status_code == 401
 
 
 def test_get_session_detail_requires_auth(client):
-    response = client.get(f"/api/v1/sessions/{uuid4()}")
+    with patch("app.core.security.settings") as mock_settings:
+        mock_settings.dev_bypass_auth = False
+        response = client.get(f"/api/v1/sessions/{uuid4()}")
     assert response.status_code == 401
 
 

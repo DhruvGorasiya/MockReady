@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pytest:*)",
+      "Bash(npm test:*)",
+      "Bash(npm run dev:*)",
+      "Bash(uvicorn:*)",
+      "Bash(alembic:*)",
+      "Bash(git:*)",
+      "Bash(ruff:*)",
+      "Read(**/*)",
+      "Write(backend/**/*)",
+      "Write(frontend/**/*)",
+      "Write(docs/**/*)",
+      "Write(tasks/**/*)"
+    ],
+    "deny": [
+      "Bash(rm -rf:*)",
+      "Bash(curl:*)",
+      "Bash(wget:*)"
+    ]
+  }
+}

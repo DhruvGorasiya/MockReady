@@ -223,3 +223,25 @@ def test_health_returns_ok(client):
     response = client.get("/health")
     assert response.status_code == 200
     assert response.json() == {"status": "ok"}
+
+
+# ---------------------------------------------------------------------------
+# POST /api/v1/sessions
+# ---------------------------------------------------------------------------
+
+
+def test_create_session_requires_auth(client):
+    response = client.post(
+        "/api/v1/sessions",
+        json={"interview_type": "behavioral", "role": "SWE"},
+    )
+    assert response.status_code == 401
+
+
+def test_create_session_returns_422_for_invalid_interview_type(authed_client):
+    test_client, _ = authed_client
+    response = test_client.post(
+        "/api/v1/sessions",
+        json={"interview_type": "standup", "role": "SWE"},
+    )
+    assert response.status_code == 422

@@ -66,8 +66,8 @@ describe("SessionDetailClient", () => {
     render(<SessionDetailClient sessionId="s1" />);
     await waitFor(() =>
       expect(
-        screen.getByText(/tell me about a time you led a project/i)
-      ).toBeInTheDocument()
+        screen.getByText(/tell me about a time you led a project/i),
+      ).toBeInTheDocument(),
     );
   });
 
@@ -75,7 +75,7 @@ describe("SessionDetailClient", () => {
     mockGetSessionDetail.mockResolvedValue(baseDetail);
     render(<SessionDetailClient sessionId="s1" />);
     await waitFor(() =>
-      expect(screen.getByText(/clarity/i)).toBeInTheDocument()
+      expect(screen.getByText(/clarity/i)).toBeInTheDocument(),
     );
   });
 
@@ -84,18 +84,24 @@ describe("SessionDetailClient", () => {
     render(<SessionDetailClient sessionId="s1" />);
 
     await waitFor(() =>
-      expect(screen.getByText(/tell me about a time/i)).toBeInTheDocument()
+      expect(screen.getByText(/tell me about a time/i)).toBeInTheDocument(),
     );
 
     await userEvent.click(screen.getByRole("button", { name: /next/i }));
 
     expect(
-      screen.getByText(/describe a technical challenge/i)
+      screen.getByText(/describe a technical challenge/i),
     ).toBeInTheDocument();
   });
 
   it("shows coach scores as authoritative when present", async () => {
-    const coachScores = { clarity: 9, depth: 9, structure: 9, relevance: 9, communication_quality: 9 };
+    const coachScores = {
+      clarity: 9,
+      depth: 9,
+      structure: 9,
+      relevance: 9,
+      communication_quality: 9,
+    };
     const detailWithCoach = {
       ...baseDetail,
       questions: [
@@ -106,16 +112,14 @@ describe("SessionDetailClient", () => {
     mockGetSessionDetail.mockResolvedValue(detailWithCoach);
     render(<SessionDetailClient sessionId="s1" />);
 
-    await waitFor(() =>
-      expect(screen.getByText(/coach/i)).toBeInTheDocument()
-    );
+    await waitFor(() => expect(screen.getByText(/coach/i)).toBeInTheDocument());
   });
 
   it("shows an error message on API failure", async () => {
     mockGetSessionDetail.mockRejectedValue(new Error("Not found"));
     render(<SessionDetailClient sessionId="s1" />);
     await waitFor(() =>
-      expect(screen.getByText(/something went wrong/i)).toBeInTheDocument()
+      expect(screen.getByText(/something went wrong/i)).toBeInTheDocument(),
     );
   });
 });

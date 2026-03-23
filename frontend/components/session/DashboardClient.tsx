@@ -2,7 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { getScoreTrends, getSessionHistory } from "@/lib/api/sessions";
-import type { SessionHistoryResponse, TrendResponse } from "@/lib/types/session";
+import type {
+  SessionHistoryResponse,
+  TrendResponse,
+} from "@/lib/types/session";
 import EmptySessionState from "@/components/session/EmptySessionState";
 import SessionCard from "@/components/session/SessionCard";
 import TrendChart from "@/components/session/TrendChart";
@@ -25,8 +28,7 @@ export default function DashboardClient() {
         setState({ status: "ok", history, trends });
       })
       .catch((err: unknown) => {
-        const message =
-          err instanceof Error ? err.message : "Unknown error";
+        const message = err instanceof Error ? err.message : "Unknown error";
         setState({ status: "error", message });
       });
   }, []);
@@ -57,7 +59,9 @@ export default function DashboardClient() {
   return (
     <div className="space-y-8">
       <section>
-        <h2 className="mb-4 text-lg font-semibold text-gray-800">Score Trend</h2>
+        <h2 className="mb-4 text-lg font-semibold text-gray-800">
+          Score Trend
+        </h2>
         <TrendChart points={trends.points} />
       </section>
 

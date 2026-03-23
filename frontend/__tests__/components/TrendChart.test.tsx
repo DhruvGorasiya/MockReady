@@ -41,6 +41,16 @@ describe("TrendChart", () => {
   it("renders a heading label", () => {
     const points = [makePoint(0)];
     render(<TrendChart points={points} />);
-    expect(screen.getByText(/composite score/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/composite score/i).length).toBeGreaterThan(0);
+  });
+
+  it("renders dimension labels in the legend", () => {
+    const points = [makePoint(0)];
+    render(<TrendChart points={points} />);
+    expect(screen.getByText(/clarity/i)).toBeInTheDocument();
+    expect(screen.getByText(/depth/i)).toBeInTheDocument();
+    expect(screen.getByText(/structure/i)).toBeInTheDocument();
+    expect(screen.getByText(/relevance/i)).toBeInTheDocument();
+    expect(screen.getByText(/communication/i)).toBeInTheDocument();
   });
 });

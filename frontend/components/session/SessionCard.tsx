@@ -25,8 +25,10 @@ export default function SessionCard({ session }: Props) {
     day: "numeric",
   });
 
-  const statusStyle = STATUS_STYLES[session.status] ?? "bg-gray-100 text-gray-600";
-  const typeLabel = INTERVIEW_TYPE_LABEL[session.interview_type] ?? session.interview_type;
+  const statusStyle =
+    STATUS_STYLES[session.status] ?? "bg-gray-100 text-gray-600";
+  const typeLabel =
+    INTERVIEW_TYPE_LABEL[session.interview_type] ?? session.interview_type;
 
   return (
     <div className="flex items-center justify-between rounded-lg border border-gray-200 bg-white px-5 py-4 shadow-sm">
@@ -46,7 +48,9 @@ export default function SessionCard({ session }: Props) {
           {session.status}
         </span>
         <span className="w-14 text-right text-lg font-semibold text-gray-900">
-          {session.composite_score !== null ? session.composite_score : (
+          {session.composite_score !== null ? (
+            session.composite_score
+          ) : (
             <span className="text-sm font-normal text-gray-400">Pending</span>
           )}
         </span>

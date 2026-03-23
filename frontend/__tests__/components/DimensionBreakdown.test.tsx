@@ -38,14 +38,18 @@ describe("DimensionBreakdown", () => {
   });
 
   it("shows coach scores when present", () => {
-    render(<DimensionBreakdown aiScores={aiScores} coachScores={coachScores} />);
+    render(
+      <DimensionBreakdown aiScores={aiScores} coachScores={coachScores} />,
+    );
     // Coach scores include 9 for clarity and relevance — at least one should appear
     const nines = screen.getAllByText("9");
     expect(nines.length).toBeGreaterThan(0);
   });
 
   it("marks coach score as authoritative with a label", () => {
-    render(<DimensionBreakdown aiScores={aiScores} coachScores={coachScores} />);
+    render(
+      <DimensionBreakdown aiScores={aiScores} coachScores={coachScores} />,
+    );
     expect(screen.getByText(/coach/i)).toBeInTheDocument();
   });
 

@@ -64,7 +64,7 @@ describe("DashboardClient", () => {
 
     render(<DashboardClient />);
     await waitFor(() =>
-      expect(screen.getByText(/no sessions yet/i)).toBeInTheDocument()
+      expect(screen.getByText(/no sessions yet/i)).toBeInTheDocument(),
     );
   });
 
@@ -91,7 +91,7 @@ describe("DashboardClient", () => {
 
     render(<DashboardClient />);
     await waitFor(() =>
-      expect(screen.getByTestId("trend-chart")).toBeInTheDocument()
+      expect(screen.getByTestId("trend-chart")).toBeInTheDocument(),
     );
   });
 
@@ -101,7 +101,7 @@ describe("DashboardClient", () => {
 
     render(<DashboardClient />);
     await waitFor(() =>
-      expect(screen.getByText(/something went wrong/i)).toBeInTheDocument()
+      expect(screen.getByText(/something went wrong/i)).toBeInTheDocument(),
     );
   });
 });

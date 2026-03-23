@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1774239588553" clover="3.2.0">
+  <project timestamp="1774239588553" name="All files">
+    <metrics statements="96" coveredstatements="57" conditionals="37" coveredconditionals="25" methods="34" coveredmethods="19" elements="167" coveredelements="101" complexity="0" loc="96" ncloc="96" packages="5" files="14" classes="14"/>
+    <package name="app">
+      <metrics statements="3" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
+      <file name="layout.tsx" path="/Users/dhruvgorasiya/Documents/Active/Northeastern University Academic Docs/Spring 2026/Vibe coding/HW4/MockReady/frontend/app/layout.tsx">
+        <metrics statements="3" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
+        <line num="2" count="0" type="stmt"/>
+        <line num="4" count="0" type="stmt"/>
+        <line num="9" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="app.(candidate).dashboard">
+      <metrics statements="6" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="4" coveredmethods="0"/>
+      <file name="error.tsx" path="/Users/dhruvgorasiya/Documents/Active/Northeastern University Academic Docs/Spring 2026/Vibe coding/HW4/MockReady/frontend/app/(candidate)/dashboard/error.tsx">
+        <metrics statements="1" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
+        <line num="3" count="0" type="stmt"/>
+      </file>
+      <file name="loading.tsx" path="/Users/dhruvgorasiya/Documents/Active/Northeastern University Academic Docs/Spring 2026/Vibe coding/HW4/MockReady/frontend/app/(candidate)/dashboard/loading.tsx">
+        <metrics statements="2" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="0"/>
+        <line num="1" count="0" type="stmt"/>
+        <line num="8" count="0" type="stmt"/>
+      </file>
+      <file name="page.tsx" path="/Users/dhruvgorasiya/Documents/Active/Northeastern University Academic Docs/Spring 2026/Vibe coding/HW4/MockReady/frontend/app/(candidate)/dashboard/page.tsx">
+        <metrics statements="3" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
+        <line num="1" count="0" type="stmt"/>
+        <line num="3" count="0" type="stmt"/>
+        <line num="5" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="app.(candidate).sessions.[id]">
+      <metrics statements="3" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="0"/>
+      <file name="loading.tsx" path="/Users/dhruvgorasiya/Documents/Active/Northeastern University Academic Docs/Spring 2026/Vibe coding/HW4/MockReady/frontend/app/(candidate)/sessions/[id]/loading.tsx">
+        <metrics statements="1" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
+        <line num="1" count="0" type="stmt"/>
+      </file>
+      <file name="page.tsx" path="/Users/dhruvgorasiya/Documents/Active/Northeastern University Academic Docs/Spring 2026/Vibe coding/HW4/MockReady/frontend/app/(candidate)/sessions/[id]/page.tsx">
+        <metrics statements="2" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="0"/>
+        <line num="1" count="0" type="stmt"/>
+        <line num="3" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="components.session">
+      <metrics statements="59" coveredstatements="57" conditionals="30" coveredconditionals="25" methods="22" coveredmethods="19"/>
+      <file name="DashboardClient.tsx" path="/Users/dhruvgorasiya/Documents/Active/Northeastern University Academic Docs/Spring 2026/Vibe coding/HW4/MockReady/frontend/components/session/DashboardClient.tsx">
+        <metrics statements="19" coveredstatements="19" conditionals="7" coveredconditionals="6" methods="5" coveredmethods="5"/>
+        <line num="3" count="1" type="stmt"/>
+        <line num="4" count="1" type="stmt"/>
+        <line num="6" count="1" type="stmt"/>
+        <line num="7" count="1" type="stmt"/>
+        <line num="8" count="1" type="stmt"/>
+        <line num="15" count="5" type="stmt"/>
+        <line num="16" count="9" type="stmt"/>
+        <line num="18" count="9" type="stmt"/>
+        <line num="21" count="5" type="cond" truecount="2" falsecount="0"/>
+        <line num="23" count="5" type="stmt"/>
+        <line num="25" count="3" type="stmt"/>
+        <line num="29" count="1" type="cond" truecount="1" falsecount="1"/>
+        <line num="30" count="1" type="stmt"/>
+        <line num="34" count="9" type="cond" truecount="1" falsecount="0"/>
+        <line num="42" count="4" type="cond" truecount="1" falsecount="0"/>
+        <line num="51" count="3" type="stmt"/>
+        <line num="53" count="3" type="cond" truecount="1" falsecount="0"/>
+        <line num="54" count="1" type="stmt"/>
+        <line num="73" count="3" type="stmt"/>
+      </file>
+      <file name="DimensionBreakdown.tsx" path="/Users/dhruvgorasiya/Documents/Active/Northeastern University Academic Docs/Spring 2026/Vibe coding/HW4/MockReady/frontend/components/session/DimensionBreakdown.tsx">
+        <metrics statements="7" coveredstatements="7" conditionals="8" coveredconditionals="8" methods="3" coveredmethods="3"/>
+        <line num="8" count="2" type="stmt"/>
+        <line num="17" count="50" type="stmt"/>
+        <line num="19" count="50" type="cond" truecount="4" falsecount="0"/>
+        <line num="32" count="10" type="stmt"/>
+        <line num="33" count="10" type="stmt"/>
+        <line num="46" count="50" type="cond" truecount="2" falsecount="0"/>
+        <line num="47" count="50" type="stmt"/>
+      </file>
+      <file name="EmptySessionState.tsx" path="/Users/dhruvgorasiya/Documents/Active/Northeastern University Academic Docs/Spring 2026/Vibe coding/HW4/MockReady/frontend/components/session/EmptySessionState.tsx">
+        <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
+        <line num="1" count="2" type="stmt"/>
+        <line num="3" count="4" type="stmt"/>
+      </file>
+      <file name="SessionCard.tsx" path="/Users/dhruvgorasiya/Documents/Active/Northeastern University Academic Docs/Spring 2026/Vibe coding/HW4/MockReady/frontend/components/session/SessionCard.tsx">
+        <metrics statements="6" coveredstatements="6" conditionals="5" coveredconditionals="3" methods="1" coveredmethods="1"/>
+        <line num="7" count="2" type="stmt"/>
+        <line num="13" count="2" type="stmt"/>
+        <line num="21" count="9" type="stmt"/>
+        <line num="22" count="9" type="stmt"/>
+        <line num="28" count="9" type="cond" truecount="1" falsecount="1"/>
+        <line num="29" count="9" type="cond" truecount="1" falsecount="1"/>
+      </file>
+      <file name="SessionDetailClient.tsx" path="/Users/dhruvgorasiya/Documents/Active/Northeastern University Academic Docs/Spring 2026/Vibe coding/HW4/MockReady/frontend/components/session/SessionDetailClient.tsx">
+        <metrics statements="20" coveredstatements="19" conditionals="9" coveredconditionals="7" methods="9" coveredmethods="7"/>
+        <line num="3" count="1" type="stmt"/>
+        <line num="4" count="1" type="stmt"/>
+        <line num="6" count="1" type="stmt"/>
+        <line num="17" count="6" type="stmt"/>
+        <line num="18" count="12" type="stmt"/>
+        <line num="19" count="12" type="stmt"/>
+        <line num="21" count="12" type="stmt"/>
+        <line num="22" count="6" type="cond" truecount="2" falsecount="0"/>
+        <line num="23" count="6" type="stmt"/>
+        <line num="24" count="4" type="stmt"/>
+        <line num="26" count="1" type="stmt"/>
+        <line num="33" count="12" type="cond" truecount="1" falsecount="0"/>
+        <line num="41" count="6" type="cond" truecount="1" falsecount="0"/>
+        <line num="50" count="5" type="stmt"/>
+        <line num="51" count="5" type="stmt"/>
+        <line num="52" count="5" type="stmt"/>
+        <line num="53" count="5" type="stmt"/>
+        <line num="55" count="5" type="cond" truecount="0" falsecount="1"/>
+        <line num="103" count="0" type="stmt"/>
+        <line num="116" count="1" type="stmt"/>
+      </file>
+      <file name="TrendChart.tsx" path="/Users/dhruvgorasiya/Documents/Active/Northeastern University Academic Docs/Spring 2026/Vibe coding/HW4/MockReady/frontend/components/session/TrendChart.tsx">
+        <metrics statements="5" coveredstatements="4" conditionals="1" coveredconditionals="1" methods="3" coveredmethods="2"/>
+        <line num="11" count="2" type="stmt"/>
+        <line num="18" count="5" type="stmt"/>
+        <line num="19" count="5" type="cond" truecount="1" falsecount="0"/>
+        <line num="27" count="12" type="stmt"/>
+        <line num="45" count="0" type="stmt"/>
+      </file>
+    </package>
+    <package name="lib.api">
+      <metrics statements="25" coveredstatements="0" conditionals="7" coveredconditionals="0" methods="5" coveredmethods="0"/>
+      <file name="client.ts" path="/Users/dhruvgorasiya/Documents/Active/Northeastern University Academic Docs/Spring 2026/Vibe coding/HW4/MockReady/frontend/lib/api/client.ts">
+        <metrics statements="17" coveredstatements="0" conditionals="7" coveredconditionals="0" methods="2" coveredmethods="0"/>
+        <line num="1" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="3" count="0" type="stmt"/>
+        <line num="5" count="0" type="stmt"/>
+        <line num="8" count="0" type="stmt"/>
+        <line num="9" count="0" type="stmt"/>
+        <line num="19" count="0" type="stmt"/>
+        <line num="24" count="0" type="stmt"/>
+        <line num="29" count="0" type="cond" truecount="0" falsecount="1"/>
+        <line num="30" count="0" type="stmt"/>
+        <line num="33" count="0" type="stmt"/>
+        <line num="38" count="0" type="cond" truecount="0" falsecount="1"/>
+        <line num="39" count="0" type="stmt"/>
+        <line num="40" count="0" type="stmt"/>
+        <line num="41" count="0" type="stmt"/>
+        <line num="42" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="46" count="0" type="stmt"/>
+        <line num="49" count="0" type="stmt"/>
+      </file>
+      <file name="sessions.ts" path="/Users/dhruvgorasiya/Documents/Active/Northeastern University Academic Docs/Spring 2026/Vibe coding/HW4/MockReady/frontend/lib/api/sessions.ts">
+        <metrics statements="8" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="3" coveredmethods="0"/>
+        <line num="1" count="0" type="stmt"/>
+        <line num="8" count="0" type="stmt"/>
+        <line num="10" count="0" type="stmt"/>
+        <line num="13" count="0" type="stmt"/>
+        <line num="16" count="0" type="stmt"/>
+        <line num="20" count="0" type="stmt"/>
+        <line num="23" count="0" type="stmt"/>
+        <line num="24" count="0" type="stmt"/>
+      </file>
+    </package>
+  </project>
+</coverage>

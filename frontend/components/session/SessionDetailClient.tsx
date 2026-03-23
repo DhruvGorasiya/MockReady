@@ -48,12 +48,16 @@ export default function SessionDetailClient({ sessionId }: Props) {
   }
 
   const { detail } = state;
-  const sorted = [...detail.questions].sort((a, b) => a.order_index - b.order_index);
+  const sorted = [...detail.questions].sort(
+    (a, b) => a.order_index - b.order_index,
+  );
   const total = sorted.length;
   const question: QuestionResult | undefined = sorted[currentIndex];
 
   if (!question) {
-    return <p className="text-gray-500">No questions found for this session.</p>;
+    return (
+      <p className="text-gray-500">No questions found for this session.</p>
+    );
   }
 
   return (
@@ -64,7 +68,9 @@ export default function SessionDetailClient({ sessionId }: Props) {
           <span className="text-sm font-medium capitalize text-gray-500">
             {detail.interview_type.replace("_", " ")} · {detail.role}
           </span>
-          <h1 className="mt-1 text-xl font-bold text-gray-900">Session Review</h1>
+          <h1 className="mt-1 text-xl font-bold text-gray-900">
+            Session Review
+          </h1>
         </div>
         <span className="text-sm text-gray-400">
           Question {currentIndex + 1} of {total}
@@ -85,7 +91,9 @@ export default function SessionDetailClient({ sessionId }: Props) {
           <p className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">
             Your Answer
           </p>
-          <p className="text-gray-700 whitespace-pre-wrap">{question.candidate_answer}</p>
+          <p className="text-gray-700 whitespace-pre-wrap">
+            {question.candidate_answer}
+          </p>
         </div>
       )}
 

@@ -231,10 +231,12 @@ def test_health_returns_ok(client):
 
 
 def test_create_session_requires_auth(client):
-    response = client.post(
-        "/api/v1/sessions",
-        json={"interview_type": "behavioral", "role": "SWE"},
-    )
+    with patch("app.core.security.settings") as mock_settings:
+        mock_settings.dev_bypass_auth = False
+        response = client.post(
+            "/api/v1/sessions",
+            json={"interview_type": "behavioral", "role": "SWE"},
+        )
     assert response.status_code == 401
 
 

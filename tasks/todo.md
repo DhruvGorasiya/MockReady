@@ -2,7 +2,7 @@
 
 **PRD Reference:** US-C04 — View Session History Dashboard
 **Branch:** `feature/session-history-dashboard`
-**Status:** Phase 5 Complete — awaiting Phase 6 approval
+**Status:** Phase 6 Complete — awaiting Phase 7 approval
 
 ---
 
@@ -105,21 +105,14 @@
 
 ### Phase 6 — Frontend: Components (TDD)
 
-- [ ] **6.1** Write failing tests in `frontend/__tests__/components/SessionCard.test.tsx`:
-  - Renders session date, interview type, role, composite score
-  - Shows "Pending" when composite score is null
-- [ ] **6.2** Create `frontend/components/session/SessionCard.tsx` — single session row card
-- [ ] **6.3** Write failing tests in `frontend/__tests__/components/TrendChart.test.tsx`:
-  - Renders without crashing with 0 data points (empty state)
-  - Renders with 10 data points
-- [ ] **6.4** Create `frontend/components/session/TrendChart.tsx` — composite score over time line chart (use `recharts`)
-- [ ] **6.5** Write failing tests in `frontend/__tests__/components/DimensionBreakdown.test.tsx`:
-  - Renders all 5 dimension scores
-  - Highlights coach score as authoritative when both ai and coach present
-- [ ] **6.6** Create `frontend/components/session/DimensionBreakdown.tsx` — dimension score bar display
-- [ ] **6.7** Write failing tests in `frontend/__tests__/components/EmptySessionState.test.tsx`:
-  - Renders call-to-action to start first session
-- [ ] **6.8** Create `frontend/components/session/EmptySessionState.tsx`
+- [x] **6.1** Write failing tests — `SessionCard.test.tsx` (6 tests: type, role, score, date, Pending, status)
+- [x] **6.2** Implement `SessionCard.tsx` — 6/6 GREEN
+- [x] **6.3** Write failing tests — `TrendChart.test.tsx` (3 tests: empty state "No data", chart container data-testid, heading label)
+- [x] **6.4** Implement `TrendChart.tsx` (recharts `LineChart` + `ResponsiveContainer`; note: SVG not rendered in jsdom, test uses `data-testid`) — 3/3 GREEN
+- [x] **6.5** Write failing tests — `DimensionBreakdown.test.tsx` (5 tests: all 5 labels, AI scores, coach scores present, coach label, no coach label)
+- [x] **6.6** Implement `DimensionBreakdown.tsx` — coach scores strikethrough AI, blue badge when coach present — 5/5 GREEN
+- [x] **6.7** Write failing tests — `EmptySessionState.test.tsx` (3 tests: heading, CTA link, description)
+- [x] **6.8** Implement `EmptySessionState.tsx` — 3/3 GREEN; full suite 17/17; `tsc --noEmit` clean
 
 ---
 

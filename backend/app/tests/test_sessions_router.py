@@ -81,6 +81,14 @@ def client():
 
 
 @pytest.fixture
+def unauthed_client():
+    """Client with dev auth bypass disabled, simulating a real unauthenticated request."""
+    with patch("app.core.security.settings") as mock_settings:
+        mock_settings.dev_bypass_auth = False
+        yield TestClient(app, raise_server_exceptions=False)
+
+
+@pytest.fixture
 def authed_client():
     """Client with get_current_user dependency overridden to a candidate user."""
     from app.core.security import get_current_user
@@ -99,25 +107,16 @@ def authed_client():
 # Auth guard
 # ---------------------------------------------------------------------------
 
-def test_get_history_requires_auth(client):
-    with patch("app.core.security.settings") as mock_settings:
-        mock_settings.dev_bypass_auth = False
-        response = client.get("/api/v1/sessions/history")
-    assert response.status_code == 401
+def test_get_history_requires_auth(unauthed_client):
+    assert unauthed_client.get("/api/v1/sessions/history").status_code == 401
 
 
-def test_get_trends_requires_auth(client):
-    with patch("app.core.security.settings") as mock_settings:
-        mock_settings.dev_bypass_auth = False
-        response = client.get("/api/v1/sessions/trends")
-    assert response.status_code == 401
+def test_get_trends_requires_auth(unauthed_client):
+    assert unauthed_client.get("/api/v1/sessions/trends").status_code == 401
 
 
-def test_get_session_detail_requires_auth(client):
-    with patch("app.core.security.settings") as mock_settings:
-        mock_settings.dev_bypass_auth = False
-        response = client.get(f"/api/v1/sessions/{uuid4()}")
-    assert response.status_code == 401
+def test_get_session_detail_requires_auth(unauthed_client):
+    assert unauthed_client.get(f"/api/v1/sessions/{uuid4()}").status_code == 401
 
 
 # ---------------------------------------------------------------------------
@@ -235,13 +234,11 @@ def test_health_returns_ok(client):
 # ---------------------------------------------------------------------------
 
 
-def test_create_session_requires_auth(client):
-    with patch("app.core.security.settings") as mock_settings:
-        mock_settings.dev_bypass_auth = False
-        response = client.post(
-            "/api/v1/sessions",
-            json={"interview_type": "behavioral", "role": "SWE"},
-        )
+def test_create_session_requires_auth(unauthed_client):
+    response = unauthed_client.post(
+        "/api/v1/sessions",
+        json={"interview_type": "behavioral", "role": "SWE"},
+    )
     assert response.status_code == 401
 
 

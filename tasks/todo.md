@@ -2,7 +2,7 @@
 
 **PRD Reference:** US-C04 — View Session History Dashboard
 **Branch:** `feature/session-history-dashboard`
-**Status:** Phase 2 Complete — awaiting Phase 3 approval
+**Status:** Phase 3 Complete — awaiting Phase 4 approval
 
 ---
 
@@ -54,27 +54,24 @@
 
 ### Phase 3 — Backend: Service (TDD — write tests first)
 
-- [ ] **3.1** Write failing tests in `backend/app/tests/test_session_service.py`:
+- [x] **3.1** Write failing tests in `backend/app/tests/test_session_service.py`:
   - `test_list_sessions_returns_empty_for_new_user`
   - `test_list_sessions_returns_sessions_for_candidate`
-  - `test_list_sessions_only_returns_own_sessions`
+  - `test_list_sessions_only_returns_completed_and_reviewed`
+  - `test_list_sessions_composite_score_is_none_when_no_scores`
   - `test_get_session_detail_returns_questions_and_scores`
-  - `test_get_session_detail_raises_404_for_wrong_user`
-  - `test_get_score_trends_returns_sorted_asc_by_date`
+  - `test_get_session_detail_raises_404_when_not_found`
+  - `test_get_session_detail_raises_404_for_wrong_candidate`
+  - `test_get_session_detail_shows_both_ai_and_coach_scores`
+  - `test_get_score_trends_returns_sorted_ascending_by_date`
   - `test_get_score_trends_caps_at_last_10_sessions`
-  - `test_composite_score_uses_coach_score_when_present`
-- [ ] **3.2** Implement `backend/app/services/session_service.py`:
-  - `async def list_sessions(db, candidate_id) -> list[SessionSummary]`
-    - Query `Session` + join `EvaluationScore` to compute composite per session
-    - Coach score is authoritative when present; fall back to ai_score
-    - Return only `completed` and `reviewed` sessions (not in-progress/abandoned)
+  - `test_get_score_trends_composite_uses_coach_score_when_present`
+  - `test_get_score_trends_skips_sessions_with_no_scores`
+- [x] **3.2** Implement `backend/app/services/session_service.py`:
+  - `async def list_sessions(db, candidate_id) -> SessionHistoryResponse`
   - `async def get_session_detail(db, session_id, candidate_id) -> SessionDetail`
-    - Raise `HTTPException(404)` if session not found or does not belong to candidate
-    - Join `SessionQuestion` → `EvaluationScore` (both ai and coach rows)
   - `async def get_score_trends(db, candidate_id, limit=10) -> TrendResponse`
-    - Return last `limit` completed sessions sorted ascending by `created_at`
-    - Include both composite and per-dimension scores for trend chart rendering
-- [ ] **3.3** Run tests — all should pass (`pytest backend/app/tests/test_session_service.py -v`)
+- [x] **3.3** Run tests — 12/12 passed (`pytest backend/app/tests/test_session_service.py -v`)
 
 ---
 

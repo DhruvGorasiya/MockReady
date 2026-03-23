@@ -2,7 +2,7 @@
 
 **PRD Reference:** US-C04 — View Session History Dashboard
 **Branch:** `feature/session-history-dashboard`
-**Status:** Planning
+**Status:** Phase 1 Complete — awaiting Phase 2 approval
 
 ---
 
@@ -23,19 +23,19 @@
 
 > These are the minimum models needed to serve the history endpoint. Full data-entry flows (session creation, answer submission) are out of scope for this task — we only need the read path.
 
-- [ ] **1.1** Bootstrap backend package: create `backend/pyproject.toml` with deps (`fastapi`, `uvicorn`, `sqlalchemy`, `alembic`, `pydantic`, `pydantic-settings`, `psycopg2-binary`, `python-jose`, `pytest`, `pytest-asyncio`, `httpx`, `ruff`)
-- [ ] **1.2** Create `backend/app/__init__.py` and `backend/app/main.py` (FastAPI app bootstrap, router mounting, CORS)
-- [ ] **1.3** Create `backend/app/core/config.py` — pydantic-settings `Settings` class reading from env vars (`DATABASE_URL`, `SUPABASE_JWT_SECRET`, `ANTHROPIC_API_KEY`)
-- [ ] **1.4** Create `backend/app/core/db.py` — SQLAlchemy async engine + `AsyncSession` dependency
-- [ ] **1.5** Create `backend/app/core/security.py` — `get_current_user` FastAPI dependency (validates Supabase JWT)
-- [ ] **1.6** Create `backend/app/models/base.py` — declarative base
-- [ ] **1.7** Create `backend/app/models/user.py` — `User` ORM model (id, email, role, created_at)
-- [ ] **1.8** Create `backend/app/models/session.py` — `Session` ORM model (id, candidate_id, interview_type, role, status, rubric_version_id, started_at, completed_at, created_at)
-- [ ] **1.9** Create `backend/app/models/question.py` — `Question` and `SessionQuestion` ORM models
-- [ ] **1.10** Create `backend/app/models/evaluation_score.py` — `EvaluationScore` ORM model (ai_score + coach_score both stored; never deleted)
-- [ ] **1.11** Create `backend/app/models/rubric.py` — `RubricVersion` ORM model
-- [ ] **1.12** Create `backend/alembic/` setup (`alembic init`, configure `env.py` to use `DATABASE_URL` from env, point `target_metadata` at all ORM models)
-- [ ] **1.13** Generate and apply initial migration: `alembic revision --autogenerate -m "initial schema"`
+- [x] **1.1** Bootstrap backend package: create `backend/pyproject.toml` with deps (`fastapi`, `uvicorn`, `sqlalchemy`, `alembic`, `pydantic`, `pydantic-settings`, `psycopg2-binary`, `python-jose`, `pytest`, `pytest-asyncio`, `httpx`, `ruff`)
+- [x] **1.2** Create `backend/app/__init__.py` and `backend/app/main.py` (FastAPI app bootstrap, router mounting, CORS)
+- [x] **1.3** Create `backend/app/core/config.py` — pydantic-settings `Settings` class reading from env vars (`DATABASE_URL`, `SUPABASE_JWT_SECRET`, `ANTHROPIC_API_KEY`)
+- [x] **1.4** Create `backend/app/core/db.py` — SQLAlchemy async engine + `AsyncSession` dependency
+- [x] **1.5** Create `backend/app/core/security.py` — `get_current_user` FastAPI dependency (validates Supabase JWT)
+- [x] **1.6** Create `backend/app/models/base.py` — declarative base
+- [x] **1.7** Create `backend/app/models/user.py` — `User` ORM model (id, email, role, created_at)
+- [x] **1.8** Create `backend/app/models/session.py` — `Session` ORM model (id, candidate_id, interview_type, role, status, rubric_version_id, started_at, completed_at, created_at)
+- [x] **1.9** Create `backend/app/models/question.py` — `Question` and `SessionQuestion` ORM models
+- [x] **1.10** Create `backend/app/models/evaluation_score.py` — `EvaluationScore` ORM model (ai_score + coach_score both stored; never deleted)
+- [x] **1.11** Create `backend/app/models/rubric.py` — `RubricVersion` ORM model
+- [x] **1.12** Create `backend/alembic/` setup (`alembic init`, configure `env.py` to use `DATABASE_URL` from env, point `target_metadata` at all ORM models)
+- [x] **1.13** Migration file written manually (`64620107b2d5_initial_schema.py`); apply with `alembic upgrade head` once DB is available
 
 ---
 

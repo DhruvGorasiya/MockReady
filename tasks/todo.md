@@ -2,7 +2,7 @@
 
 **PRD Reference:** US-C04 — View Session History Dashboard
 **Branch:** `feature/session-history-dashboard`
-**Status:** Phase 4 Complete — awaiting Phase 5 approval
+**Status:** Phase 5 Complete — awaiting Phase 6 approval
 
 ---
 
@@ -90,16 +90,16 @@
 
 ### Phase 5 — Frontend Foundation
 
-- [ ] **5.1** Bootstrap frontend: create `frontend/package.json` with Next.js 14, TypeScript, Tailwind CSS, Jest, RTL
-- [ ] **5.2** Create `frontend/tsconfig.json`, `frontend/tailwind.config.ts`, `frontend/next.config.ts`, `frontend/jest.config.ts`
-- [ ] **5.3** Create `frontend/app/layout.tsx` — root layout with Tailwind base styles
-- [ ] **5.4** Create `frontend/lib/types/session.ts` — TypeScript types mirroring backend Pydantic schemas:
-  - `DimensionScores`, `QuestionResult`, `SessionSummary`, `SessionDetail`, `TrendPoint`, `TrendResponse`
-- [ ] **5.5** Create `frontend/lib/api/client.ts` — base fetch wrapper with auth header injection and error handling
-- [ ] **5.6** Create `frontend/lib/api/sessions.ts` — typed API functions:
-  - `getSessionHistory(): Promise<SessionHistoryResponse>`
-  - `getSessionDetail(id: string): Promise<SessionDetail>`
-  - `getScoreTrends(): Promise<TrendResponse>`
+- [x] **5.1** Bootstrap frontend: `frontend/package.json` with Next.js 14, TypeScript, Tailwind CSS, Jest, RTL, recharts
+- [x] **5.2** Created `frontend/tsconfig.json`, `frontend/tailwind.config.ts`, `frontend/next.config.mjs` (not .ts — unsupported by Next.js 14.2), `frontend/jest.config.js` (not .ts — requires ts-node), `frontend/postcss.config.js`, `frontend/jest.setup.ts`
+- [x] **5.3** Create `frontend/app/layout.tsx` + `frontend/app/globals.css` — root layout with Tailwind base styles
+- [x] **5.4** Create `frontend/lib/types/session.ts` — TypeScript types mirroring backend Pydantic schemas:
+  - `DimensionScores`, `QuestionResult`, `SessionSummary`, `SessionDetail`, `SessionHistoryResponse`, `TrendPoint`, `TrendResponse`
+- [x] **5.5** Create `frontend/lib/api/client.ts` — `apiFetch` wrapper with Bearer token injection, `ApiError` class for non-2xx responses
+- [x] **5.6** Create `frontend/lib/api/sessions.ts`:
+  - `getSessionHistory(token): Promise<SessionHistoryResponse>`
+  - `getSessionDetail(id, token): Promise<SessionDetail>`
+  - `getScoreTrends(token): Promise<TrendResponse>`
 
 ---
 

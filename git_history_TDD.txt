@@ -1,0 +1,25 @@
+(env_pytorch) dhruvgorasiya@Dhruvs-MacBook-Pro backend % git log --oneline
+fe0fec1 (HEAD -> main, origin/step3, origin/main, origin/HEAD, step3) refactor - Unauthenticated request returns 401
+05b5274 green - Unauthenticated request returns 401
+aaff6fc green - Unauthenticated request returns 401
+27855da red - Unauthenticated request returns 401
+a8b42e3 refactor
+ebdec8b green
+3114e52 red
+0681620 step 2 done
+6838598 verify: all tests passing, linters clean, US-C04 acceptance criteria met
+fc56f2f feat: session history dashboard page and session detail page with all states
+0b885e1 feat: session history components with TDD, SessionCard, TrendChart, DimensionBreakdown, EmptySessionState
+9a5dde2 feat: frontend bootstrap, TypeScript types, and session API client
+568473e feat: session router with auth guards, 22/22 tests passing, lint clean
+7e70ce3 feat: session service with TDD, 12 tests covering list, detail, and trend functions
+6edd336 feat: pydantic schemas for session history, detail, and trend responses
+5077aa4 feat: backend foundation, ORM models, and alembic setup for session history
+521df5d plan: session history dashboard implementation plan for US-C04
+629a3b6 chore: iterate on CLAUDE.md based on /init output
+2d7f20c chore: add Claude Code permissions in .claude/settings.json
+4f2455c Add claude.md with project context for Claude Code
+467edbe prd
+fb77df5 Add project skeleton: frontend, backend, README
+f9714cc first commit
+(env_pytorch) dhruvgorasiya@Dhruvs-MacBook-Pro backend % 

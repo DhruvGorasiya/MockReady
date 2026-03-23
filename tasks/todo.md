@@ -2,7 +2,7 @@
 
 **PRD Reference:** US-C04 — View Session History Dashboard
 **Branch:** `feature/session-history-dashboard`
-**Status:** Phase 3 Complete — awaiting Phase 4 approval
+**Status:** Phase 4 Complete — awaiting Phase 5 approval
 
 ---
 
@@ -77,20 +77,14 @@
 
 ### Phase 4 — Backend: Route Handler
 
-- [ ] **4.1** Write failing tests in `backend/app/tests/test_sessions_router.py`:
-  - `test_get_history_requires_auth` — expect 401 with no token
-  - `test_get_history_returns_200_for_valid_candidate`
-  - `test_get_history_empty_state_returns_empty_list`
-  - `test_get_session_detail_404_for_other_candidate`
-  - `test_get_trends_returns_trend_points`
-- [ ] **4.2** Create `backend/app/api/v1/sessions.py` — thin route handlers only; all logic delegated to `session_service`:
+- [x] **4.1** Write failing tests in `backend/app/tests/test_sessions_router.py` — 10 tests covering auth guard (401), happy paths, empty state, 404, and `/health`
+- [x] **4.2** Create `backend/app/api/v1/sessions.py` — thin route handlers; all logic in `session_service`:
   - `GET /api/v1/sessions/history` → `session_service.list_sessions`
-  - `GET /api/v1/sessions/{session_id}` → `session_service.get_session_detail`
   - `GET /api/v1/sessions/trends` → `session_service.get_score_trends`
-  - All routes use `get_current_user` dependency; candidate role required
-- [ ] **4.3** Create `backend/app/api/v1/__init__.py` and `backend/app/api/__init__.py`; mount router in `main.py`
-- [ ] **4.4** Create `backend/app/api/v1/health.py` — `GET /health` (no auth; liveness probe)
-- [ ] **4.5** Run router tests — all should pass
+  - `GET /api/v1/sessions/{session_id}` → `session_service.get_session_detail`
+- [x] **4.3** Mount router in `main.py` via `app.include_router`; `__init__.py` files already existed
+- [x] **4.4** Create `backend/app/api/v1/health.py` — `GET /health` (no auth)
+- [x] **4.5** Run router tests — 10/10 passed; full suite 22/22 passed
 
 ---
 

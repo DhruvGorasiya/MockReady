@@ -1,6 +1,6 @@
 import asyncio
 from datetime import datetime, timezone
-from uuid import UUID
+from uuid import UUID, uuid4
 
 from fastapi import HTTPException, status
 from sqlalchemy import select
@@ -202,11 +202,10 @@ async def create_session(
     db: AsyncSession, user_id: UUID, interview_type: InterviewType
 ) -> SessionCreateResponse:
     """Create a bare session record and return its identity. No AI calls."""
-    from uuid import uuid4
-
+    session_id = uuid4()
     now = datetime.now(timezone.utc)
     session = Session(
-        id=uuid4(),
+        id=session_id,
         candidate_id=user_id,
         interview_type=interview_type,
         role=InterviewRole.SWE,
@@ -217,10 +216,10 @@ async def create_session(
     await db.commit()
     await db.refresh(session)
     return SessionCreateResponse(
-        session_id=session.id,
-        status=session.status,
-        interview_type=session.interview_type,
-        created_at=session.created_at,
+        session_id=session_id,
+        status=SessionStatus.created,
+        interview_type=interview_type,
+        created_at=now,
     )
 
 

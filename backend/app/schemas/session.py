@@ -55,3 +55,51 @@ class TrendPoint(BaseModel):
 
 class TrendResponse(BaseModel):
     points: list[TrendPoint]
+
+
+# --- Session creation ---
+
+
+class CreateSessionRequest(BaseModel):
+    interview_type: InterviewType
+    role: InterviewRole
+    question_count: int = Field(default=3, ge=1, le=5)
+
+
+class QuestionInSession(BaseModel):
+    id: UUID
+    question_text: str
+    order_index: int
+
+
+class SessionCreatedResponse(BaseModel):
+    id: UUID
+    interview_type: InterviewType
+    role: InterviewRole
+    status: SessionStatus
+    questions: list[QuestionInSession]
+
+
+# --- Answer submission ---
+
+
+class SubmitAnswerRequest(BaseModel):
+    answer: str = Field(..., min_length=1)
+
+
+class DimensionFeedback(BaseModel):
+    clarity: str
+    depth: str
+    structure: str
+    relevance: str
+    communication_quality: str
+
+
+class AnswerFeedbackResponse(BaseModel):
+    session_question_id: UUID
+    ai_scores: DimensionScores
+    composite_score: float
+    feedback_summary: str
+    dimension_feedback: DimensionFeedback
+    improvement_suggestion: str
+    is_session_complete: bool

@@ -39,7 +39,8 @@ export async function apiFetch<T>(
     let detail = response.statusText;
     try {
       const body = await response.json();
-      detail = body?.detail ?? detail;
+      const raw = body?.detail ?? detail;
+      detail = typeof raw === "string" ? raw : JSON.stringify(raw);
     } catch {
       // leave detail as statusText
     }

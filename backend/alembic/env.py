@@ -1,10 +1,15 @@
 import asyncio
 import os
 from logging.config import fileConfig
+from pathlib import Path
 
+from dotenv import load_dotenv
 from sqlalchemy import pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
+
+# Load .env so DATABASE_URL is available when running alembic directly
+load_dotenv(Path(__file__).parent.parent / ".env")
 
 # Load all models so Alembic can detect schema changes
 import app.models  # noqa: F401
@@ -18,12 +23,11 @@ if config.config_file_name is not None:
 
 target_metadata = Base.metadata
 
-# Override sqlalchemy.url from environment variable if set
-database_url = os.environ.get("DATABASE_URL")
+# Use DATABASE_URL from env; ensure it uses the asyncpg driver
+database_url = os.environ.get("DATABASE_URL", "")
 if database_url:
-    # Alembic needs the sync driver; swap asyncpg -> psycopg2
-    sync_url = database_url.replace("postgresql+asyncpg://", "postgresql://")
-    config.set_main_option("sqlalchemy.url", sync_url)
+    async_url = database_url.replace("postgresql://", "postgresql+asyncpg://", 1)
+    config.set_main_option("sqlalchemy.url", async_url)
 
 
 def run_migrations_offline() -> None:

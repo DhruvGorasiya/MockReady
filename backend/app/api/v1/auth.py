@@ -1,7 +1,6 @@
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.db import get_db
@@ -20,7 +19,7 @@ async def register(
         return await auth_service.register_user(db, body)
     except HTTPException:
         raise
-    except SQLAlchemyError:
+    except Exception:
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail="Registration unavailable. Please try again later.",
@@ -36,7 +35,7 @@ async def login(
         return await auth_service.login_user(db, body)
     except HTTPException:
         raise
-    except SQLAlchemyError:
+    except Exception:
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail="Login unavailable. Please try again later.",

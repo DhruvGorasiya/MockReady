@@ -14,6 +14,14 @@ class DimensionScores(BaseModel):
     communication_quality: int = Field(..., ge=1, le=10)
 
 
+class EvaluationReasoning(BaseModel):
+    clarity: str | None = None
+    depth: str | None = None
+    structure: str | None = None
+    relevance: str | None = None
+    communication_quality: str | None = None
+
+
 class QuestionResult(BaseModel):
     id: UUID
     question_text: str
@@ -22,7 +30,7 @@ class QuestionResult(BaseModel):
     ai_scores: DimensionScores | None
     coach_scores: DimensionScores | None
     # Per-dimension reasoning (AI) or justification (coach)
-    feedback: dict | None
+    feedback: EvaluationReasoning | None
 
 
 class SessionSummary(BaseModel):
@@ -70,6 +78,7 @@ class SessionCreateResponse(BaseModel):
 class CreateSessionRequest(BaseModel):
     interview_type: InterviewType
     role: InterviewRole
+    # Used by create_session_with_questions; ignored by the bare POST /sessions endpoint
     question_count: int = Field(default=3, ge=1, le=5)
 
 

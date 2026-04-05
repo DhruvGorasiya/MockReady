@@ -15,7 +15,10 @@ from app.main import app
 from app.models.session import InterviewRole, InterviewType, SessionStatus
 from app.models.user import User, UserRole
 from app.schemas.session import (
+    AnswerFeedbackResponse,
+    DimensionFeedback,
     DimensionScores,
+    SessionCreateResponse,
     SessionDetail,
     SessionHistoryResponse,
     SessionSummary,
@@ -249,3 +252,166 @@ def test_create_session_returns_422_for_invalid_interview_type(authed_client):
         json={"interview_type": "standup", "role": "SWE"},
     )
     assert response.status_code == 422
+
+
+def test_create_session_returns_201(authed_client):
+    test_client, user = authed_client
+    session_response = SessionCreateResponse(
+        session_id=uuid4(),
+        status=SessionStatus.created,
+        interview_type=InterviewType.behavioral,
+        created_at=datetime(2026, 1, 1, tzinfo=timezone.utc),
+    )
+
+    with patch(
+        "app.api.v1.sessions.session_service.create_session",
+        new=AsyncMock(return_value=session_response),
+    ):
+        response = test_client.post(
+            "/api/v1/sessions",
+            json={"interview_type": "behavioral", "role": "SWE"},
+        )
+
+    assert response.status_code == 201
+    assert response.json()["status"] == "created"
+
+
+def test_create_session_returns_500_on_service_error(authed_client):
+    test_client, _ = authed_client
+
+    with patch(
+        "app.api.v1.sessions.session_service.create_session",
+        new=AsyncMock(side_effect=RuntimeError("db exploded")),
+    ):
+        response = test_client.post(
+            "/api/v1/sessions",
+            json={"interview_type": "behavioral", "role": "SWE"},
+        )
+
+    assert response.status_code == 500
+
+
+# ---------------------------------------------------------------------------
+# POST /api/v1/sessions/{session_id}/questions/{question_id}/answer
+# ---------------------------------------------------------------------------
+
+def _make_answer_response() -> AnswerFeedbackResponse:
+    scores = DimensionScores(
+        clarity=8, depth=7, structure=8, relevance=9, communication_quality=7
+    )
+    return AnswerFeedbackResponse(
+        session_question_id=uuid4(),
+        ai_scores=scores,
+        composite_score=7.8,
+        feedback_summary="Good answer overall.",
+        dimension_feedback=DimensionFeedback(
+            clarity="Clear explanation.",
+            depth="Could go deeper.",
+            structure="Well structured.",
+            relevance="Directly relevant.",
+            communication_quality="Communicated effectively.",
+        ),
+        improvement_suggestion="Add more concrete examples.",
+        is_session_complete=False,
+    )
+
+
+def test_submit_answer_requires_auth(unauthed_client):
+    url = f"/api/v1/sessions/{uuid4()}/questions/{uuid4()}/answer"
+    response = unauthed_client.post(url, json={"answer": "My answer here."})
+    assert response.status_code == 401
+
+
+def test_submit_answer_returns_200(authed_client):
+    test_client, _ = authed_client
+    answer_response = _make_answer_response()
+
+    with patch(
+        "app.api.v1.sessions.session_service.submit_answer",
+        new=AsyncMock(return_value=answer_response),
+    ):
+        response = test_client.post(
+            f"/api/v1/sessions/{uuid4()}/questions/{uuid4()}/answer",
+            json={"answer": "My answer here."},
+        )
+
+    assert response.status_code == 200
+    assert response.json()["composite_score"] == 7.8
+
+
+def test_submit_answer_404_session_not_found(authed_client):
+    test_client, _ = authed_client
+
+    with patch(
+        "app.api.v1.sessions.session_service.submit_answer",
+        new=AsyncMock(side_effect=HTTPException(status_code=404, detail="Session not found")),
+    ):
+        response = test_client.post(
+            f"/api/v1/sessions/{uuid4()}/questions/{uuid4()}/answer",
+            json={"answer": "My answer here."},
+        )
+
+    assert response.status_code == 404
+
+
+def test_submit_answer_404_question_not_found(authed_client):
+    test_client, _ = authed_client
+
+    with patch(
+        "app.api.v1.sessions.session_service.submit_answer",
+        new=AsyncMock(side_effect=HTTPException(status_code=404, detail="Question not found")),
+    ):
+        response = test_client.post(
+            f"/api/v1/sessions/{uuid4()}/questions/{uuid4()}/answer",
+            json={"answer": "My answer here."},
+        )
+
+    assert response.status_code == 404
+
+
+def test_submit_answer_409_already_answered(authed_client):
+    test_client, _ = authed_client
+
+    with patch(
+        "app.api.v1.sessions.session_service.submit_answer",
+        new=AsyncMock(side_effect=HTTPException(status_code=409, detail="Answer already submitted")),
+    ):
+        response = test_client.post(
+            f"/api/v1/sessions/{uuid4()}/questions/{uuid4()}/answer",
+            json={"answer": "My answer here."},
+        )
+
+    assert response.status_code == 409
+
+
+def test_submit_answer_422_empty_answer(authed_client):
+    test_client, _ = authed_client
+    response = test_client.post(
+        f"/api/v1/sessions/{uuid4()}/questions/{uuid4()}/answer",
+        json={"answer": ""},
+    )
+    assert response.status_code == 422
+
+
+def test_submit_answer_422_answer_too_long(authed_client):
+    test_client, _ = authed_client
+    response = test_client.post(
+        f"/api/v1/sessions/{uuid4()}/questions/{uuid4()}/answer",
+        json={"answer": "x" * 5001},
+    )
+    assert response.status_code == 422
+
+
+def test_submit_answer_503_on_agent_failure(authed_client):
+    test_client, _ = authed_client
+
+    with patch(
+        "app.api.v1.sessions.session_service.submit_answer",
+        new=AsyncMock(side_effect=RuntimeError("agent timed out")),
+    ):
+        response = test_client.post(
+            f"/api/v1/sessions/{uuid4()}/questions/{uuid4()}/answer",
+            json={"answer": "My answer here."},
+        )
+
+    assert response.status_code == 503

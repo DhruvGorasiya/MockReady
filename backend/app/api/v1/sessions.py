@@ -35,6 +35,8 @@ async def create_session(
             interview_type=body.interview_type,
             role=body.role,
         )
+    except HTTPException:
+        raise
     except Exception:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -53,13 +55,21 @@ async def submit_answer(
     current_user: Annotated[User, Depends(get_current_user)],
     db: Annotated[AsyncSession, Depends(get_db)],
 ) -> AnswerFeedbackResponse:
-    return await session_service.submit_answer(
-        db,
-        session_id=session_id,
-        question_id=question_id,
-        candidate_id=current_user.id,
-        answer=body.answer,
-    )
+    try:
+        return await session_service.submit_answer(
+            db,
+            session_id=session_id,
+            question_id=question_id,
+            candidate_id=current_user.id,
+            answer=body.answer,
+        )
+    except HTTPException:
+        raise
+    except Exception:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Answer submission failed. Please try again.",
+        )
 
 
 @router.get("/history", response_model=SessionHistoryResponse)

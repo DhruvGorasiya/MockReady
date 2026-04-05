@@ -91,7 +91,7 @@ class SessionCreatedResponse(BaseModel):
 
 
 class SubmitAnswerRequest(BaseModel):
-    answer: str = Field(..., min_length=1)
+    answer: str = Field(..., min_length=1, max_length=5000)
 
 
 class DimensionFeedback(BaseModel):

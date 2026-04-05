@@ -199,7 +199,7 @@ async def get_score_trends(
 
 
 async def create_session(
-    db: AsyncSession, user_id: UUID, interview_type: InterviewType
+    db: AsyncSession, user_id: UUID, interview_type: InterviewType, role: InterviewRole
 ) -> SessionCreateResponse:
     """Create a bare session record and return its identity. No AI calls."""
     session_id = uuid4()
@@ -208,7 +208,7 @@ async def create_session(
         id=session_id,
         candidate_id=user_id,
         interview_type=interview_type,
-        role=InterviewRole.SWE,
+        role=role,
         status=SessionStatus.created,
         created_at=now,
     )

@@ -1,7 +1,7 @@
 from typing import Annotated
 from uuid import UUID
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.db import get_db
@@ -28,9 +28,18 @@ async def create_session(
     current_user: Annotated[User, Depends(get_current_user)],
     db: Annotated[AsyncSession, Depends(get_db)],
 ) -> SessionCreateResponse:
-    return await session_service.create_session(
-        db, user_id=current_user.id, interview_type=body.interview_type
-    )
+    try:
+        return await session_service.create_session(
+            db,
+            user_id=current_user.id,
+            interview_type=body.interview_type,
+            role=body.role,
+        )
+    except Exception:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to create session.",
+        )
 
 
 @router.post(

@@ -1,0 +1,259 @@
+- generic [ref=e2]:
+  - region
+  - generic [ref=e3]:
+    - link "Skip to content" [ref=e4] [cursor=pointer]:
+      - /url: "#start-of-content"
+    - banner [ref=e6]:
+      - heading "Navigation Menu" [level=2] [ref=e7]
+      - generic [ref=e8]:
+        - link "Homepage" [ref=e10] [cursor=pointer]:
+          - /url: /
+          - img [ref=e11]
+        - generic [ref=e13]:
+          - navigation "Global" [ref=e16]:
+            - list [ref=e17]:
+              - listitem [ref=e18]:
+                - button "Platform" [ref=e20] [cursor=pointer]:
+                  - text: Platform
+                  - img [ref=e21]
+              - listitem [ref=e23]:
+                - button "Solutions" [ref=e25] [cursor=pointer]:
+                  - text: Solutions
+                  - img [ref=e26]
+              - listitem [ref=e28]:
+                - button "Resources" [ref=e30] [cursor=pointer]:
+                  - text: Resources
+                  - img [ref=e31]
+              - listitem [ref=e33]:
+                - button "Open Source" [ref=e35] [cursor=pointer]:
+                  - text: Open Source
+                  - img [ref=e36]
+              - listitem [ref=e38]:
+                - button "Enterprise" [ref=e40] [cursor=pointer]:
+                  - text: Enterprise
+                  - img [ref=e41]
+              - listitem [ref=e43]:
+                - link "Pricing" [ref=e44] [cursor=pointer]:
+                  - /url: https://github.com/pricing
+                  - generic [ref=e45]: Pricing
+          - generic [ref=e46]:
+            - button "Search or jump to…" [ref=e49] [cursor=pointer]:
+              - img [ref=e51]
+            - link "Sign in" [ref=e54] [cursor=pointer]:
+              - /url: /login?return_to=https%3A%2F%2Fgithub.com%2FDhruvGorasiya%2FMockReady%2Ftree%2Fmain%2Fbackend%2Fapp%2Ftests
+            - link "Sign up" [ref=e55] [cursor=pointer]:
+              - /url: /signup?ref_cta=Sign+up&ref_loc=header+logged+out&ref_page=%2F%3Cuser-name%3E%2F%3Crepo-name%3E%2Ffiles%2Fdisambiguate&source=header-repo&source_repo=DhruvGorasiya%2FMockReady
+            - button "Appearance settings" [ref=e58] [cursor=pointer]:
+              - img
+  - main [ref=e62]:
+    - generic [ref=e63]:
+      - generic [ref=e64]:
+        - generic [ref=e66]:
+          - img [ref=e67]
+          - link "DhruvGorasiya" [ref=e70] [cursor=pointer]:
+            - /url: /DhruvGorasiya
+          - generic [ref=e71]: /
+          - strong [ref=e72]:
+            - link "MockReady" [ref=e73] [cursor=pointer]:
+              - /url: /DhruvGorasiya/MockReady
+          - generic [ref=e74]: Public
+        - generic [ref=e75]:
+          - list:
+            - listitem [ref=e76]:
+              - link "You must be signed in to change notification settings" [ref=e77] [cursor=pointer]:
+                - /url: /login?return_to=%2FDhruvGorasiya%2FMockReady
+                - img [ref=e78]
+                - text: Notifications
+            - listitem [ref=e80]:
+              - link "Fork 0" [ref=e81] [cursor=pointer]:
+                - /url: /login?return_to=%2FDhruvGorasiya%2FMockReady
+                - img [ref=e82]
+                - text: Fork
+                - generic "0" [ref=e84]
+            - listitem [ref=e85]:
+              - link "You must be signed in to star a repository" [ref=e87] [cursor=pointer]:
+                - /url: /login?return_to=%2FDhruvGorasiya%2FMockReady
+                - img [ref=e88]
+                - text: Star
+                - generic "0 users starred this repository" [ref=e90]: "0"
+      - navigation "Repository" [ref=e91]:
+        - list [ref=e92]:
+          - listitem [ref=e93]:
+            - link "Code" [ref=e94] [cursor=pointer]:
+              - /url: /DhruvGorasiya/MockReady
+              - img [ref=e95]
+              - generic [ref=e97]: Code
+          - listitem [ref=e98]:
+            - link "Issues" [ref=e99] [cursor=pointer]:
+              - /url: /DhruvGorasiya/MockReady/issues
+              - img [ref=e100]
+              - generic [ref=e103]: Issues
+          - listitem [ref=e104]:
+            - link "Pull requests" [ref=e105] [cursor=pointer]:
+              - /url: /DhruvGorasiya/MockReady/pulls
+              - img [ref=e106]
+              - generic [ref=e108]: Pull requests
+          - listitem [ref=e109]:
+            - link "Actions" [ref=e110] [cursor=pointer]:
+              - /url: /DhruvGorasiya/MockReady/actions
+              - img [ref=e111]
+              - generic [ref=e113]: Actions
+          - listitem [ref=e114]:
+            - link "Projects" [ref=e115] [cursor=pointer]:
+              - /url: /DhruvGorasiya/MockReady/projects
+              - img [ref=e116]
+              - generic [ref=e118]: Projects
+          - listitem [ref=e119]:
+            - link "Security and quality" [ref=e120] [cursor=pointer]:
+              - /url: /DhruvGorasiya/MockReady/security
+              - img [ref=e121]
+              - generic [ref=e123]: Security and quality
+          - listitem [ref=e124]:
+            - link "Insights" [ref=e125] [cursor=pointer]:
+              - /url: /DhruvGorasiya/MockReady/pulse
+              - img [ref=e126]
+              - generic [ref=e128]: Insights
+    - generic [ref=e139]:
+      - generic [ref=e143]:
+        - generic [ref=e144]:
+          - heading "Expand file tree" [level=2] [ref=e146]:
+            - button "Expand file tree" [ref=e147] [cursor=pointer]:
+              - img [ref=e148]
+          - button "main branch" [ref=e152] [cursor=pointer]:
+            - generic [ref=e153]:
+              - generic [ref=e155]:
+                - img [ref=e157]
+                - generic [ref=e160]: main
+              - generic:
+                - img
+          - generic [ref=e162]:
+            - navigation "Breadcrumbs" [ref=e163]:
+              - heading "Breadcrumbs" [level=2] [ref=e164]
+              - list [ref=e165]:
+                - listitem [ref=e166]:
+                  - link "MockReady" [ref=e167] [cursor=pointer]:
+                    - /url: /DhruvGorasiya/MockReady/tree/main
+                - listitem [ref=e168]:
+                  - text: /
+                  - link "backend" [ref=e169] [cursor=pointer]:
+                    - /url: /DhruvGorasiya/MockReady/tree/main/backend
+                - listitem [ref=e170]:
+                  - text: /
+                  - link "app" [ref=e171] [cursor=pointer]:
+                    - /url: /DhruvGorasiya/MockReady/tree/main/backend/app
+            - generic [ref=e172]:
+              - text: /
+              - heading "tests" [level=1] [ref=e173]
+              - text: /
+            - button "Copy path" [ref=e174] [cursor=pointer]:
+              - img [ref=e175]
+        - generic [ref=e180]:
+          - heading "Directory actions" [level=2] [ref=e181]
+          - generic [ref=e184]:
+            - img [ref=e186]
+            - combobox "Go to file" [ref=e188]
+          - heading "More options" [level=2] [ref=e189]
+          - button "More options" [ref=e190] [cursor=pointer]:
+            - img [ref=e191]
+      - generic [ref=e193]:
+        - generic [ref=e195]:
+          - heading "Latest commit" [level=2] [ref=e196]
+          - generic [ref=e199]:
+            - heading "History" [level=2] [ref=e200]
+            - link "History" [ref=e201] [cursor=pointer]:
+              - /url: /DhruvGorasiya/MockReady/commits/main/backend/app/tests
+              - generic [ref=e202]:
+                - generic:
+                  - img
+                - generic [ref=e203]: History
+        - generic [ref=e205]:
+          - heading "Folders and files" [level=2] [ref=e206]
+          - table "Folders and files" [ref=e207]:
+            - rowgroup [ref=e208]:
+              - row "Name Last commit message Last commit date" [ref=e209]:
+                - columnheader "Name" [ref=e210]
+                - columnheader "Last commit message" [ref=e211]:
+                  - generic "Last commit message" [ref=e212]
+                - columnheader "Last commit date" [ref=e213]:
+                  - generic "Last commit date" [ref=e214]
+            - rowgroup [ref=e215]:
+              - row "parent directory Parent directory" [ref=e216]:
+                - cell "parent directory Parent directory" [ref=e217]:
+                  - heading "parent directory" [level=3] [ref=e218]
+                  - link "Parent directory" [ref=e219] [cursor=pointer]:
+                    - /url: /DhruvGorasiya/MockReady/tree/main/backend/app
+                    - generic [ref=e220]:
+                      - img [ref=e221]
+                      - text: ..
+              - row "__pycache__, (Directory)" [ref=e223]:
+                - cell "__pycache__, (Directory)" [ref=e224]:
+                  - generic [ref=e225]:
+                    - img [ref=e226]
+                    - link "__pycache__, (Directory)" [ref=e231] [cursor=pointer]:
+                      - /url: /DhruvGorasiya/MockReady/tree/main/backend/app/tests/__pycache__
+                      - text: __pycache__
+                - cell [ref=e232]
+                - cell [ref=e234]
+              - row "__init__.py, (File)" [ref=e237]:
+                - cell "__init__.py, (File)" [ref=e238]:
+                  - generic [ref=e239]:
+                    - img [ref=e240]
+                    - link "__init__.py, (File)" [ref=e245] [cursor=pointer]:
+                      - /url: /DhruvGorasiya/MockReady/blob/main/backend/app/tests/__init__.py
+                      - text: __init__.py
+                - cell [ref=e246]
+                - cell [ref=e248]
+              - row "test_session_service.py, (File)" [ref=e251]:
+                - cell "test_session_service.py, (File)" [ref=e252]:
+                  - generic [ref=e253]:
+                    - img [ref=e254]
+                    - link "test_session_service.py, (File)" [ref=e259] [cursor=pointer]:
+                      - /url: /DhruvGorasiya/MockReady/blob/main/backend/app/tests/test_session_service.py
+                      - text: test_session_service.py
+                - cell [ref=e260]
+                - cell [ref=e262]
+              - row "test_sessions_router.py, (File)" [ref=e265]:
+                - cell "test_sessions_router.py, (File)" [ref=e266]:
+                  - generic [ref=e267]:
+                    - img [ref=e268]
+                    - link "test_sessions_router.py, (File)" [ref=e273] [cursor=pointer]:
+                      - /url: /DhruvGorasiya/MockReady/blob/main/backend/app/tests/test_sessions_router.py
+                      - text: test_sessions_router.py
+                - cell [ref=e274]
+                - cell [ref=e276]
+  - contentinfo [ref=e280]:
+    - heading "Footer" [level=2] [ref=e281]
+    - generic [ref=e282]:
+      - generic [ref=e283]:
+        - link "GitHub Homepage" [ref=e284] [cursor=pointer]:
+          - /url: https://github.com
+          - img [ref=e285]
+        - generic [ref=e287]: © 2026 GitHub, Inc.
+      - navigation "Footer" [ref=e288]:
+        - heading "Footer navigation" [level=3] [ref=e289]
+        - list "Footer navigation" [ref=e290]:
+          - listitem [ref=e291]:
+            - link "Terms" [ref=e292] [cursor=pointer]:
+              - /url: https://docs.github.com/site-policy/github-terms/github-terms-of-service
+          - listitem [ref=e293]:
+            - link "Privacy" [ref=e294] [cursor=pointer]:
+              - /url: https://docs.github.com/site-policy/privacy-policies/github-privacy-statement
+          - listitem [ref=e295]:
+            - link "Security" [ref=e296] [cursor=pointer]:
+              - /url: https://github.com/security
+          - listitem [ref=e297]:
+            - link "Status" [ref=e298] [cursor=pointer]:
+              - /url: https://www.githubstatus.com/
+          - listitem [ref=e299]:
+            - link "Community" [ref=e300] [cursor=pointer]:
+              - /url: https://github.community/
+          - listitem [ref=e301]:
+            - link "Docs" [ref=e302] [cursor=pointer]:
+              - /url: https://docs.github.com/
+          - listitem [ref=e303]:
+            - link "Contact" [ref=e304] [cursor=pointer]:
+              - /url: https://support.github.com?tags=dotcom-footer
+          - listitem [ref=e305]:
+            - button "Manage cookies" [ref=e307] [cursor=pointer]
+          - listitem [ref=e308]:
+            - button "Do not share my personal information" [ref=e310] [cursor=pointer]

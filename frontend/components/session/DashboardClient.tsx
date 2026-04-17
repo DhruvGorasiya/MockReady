@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { getScoreTrends, getSessionHistory } from "@/lib/api/sessions";
+import { useAuth } from "@/lib/auth/AuthContext";
 import type {
   SessionHistoryResponse,
   TrendResponse,
@@ -17,11 +18,10 @@ type State =
 
 export default function DashboardClient() {
   const [state, setState] = useState<State>({ status: "loading" });
+  const { token } = useAuth();
 
   useEffect(() => {
-    // Token is sourced from the session cookie/storage in a real auth flow.
-    // For now, read from env so the component stays testable without auth.
-    const token = process.env.NEXT_PUBLIC_API_TOKEN ?? "";
+    if (!token) return;
 
     Promise.all([getSessionHistory(token), getScoreTrends(token)])
       .then(([history, trends]) => {
@@ -31,7 +31,7 @@ export default function DashboardClient() {
         const message = err instanceof Error ? err.message : "Unknown error";
         setState({ status: "error", message });
       });
-  }, []);
+  }, [token]);
 
   if (state.status === "loading") {
     return (

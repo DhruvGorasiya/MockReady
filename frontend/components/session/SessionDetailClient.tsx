@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { getSessionDetail } from "@/lib/api/sessions";
+import { useAuth } from "@/lib/auth/AuthContext";
 import type { QuestionResult, SessionDetail } from "@/lib/types/session";
 import DimensionBreakdown from "@/components/session/DimensionBreakdown";
 
@@ -17,9 +18,10 @@ type State =
 export default function SessionDetailClient({ sessionId }: Props) {
   const [state, setState] = useState<State>({ status: "loading" });
   const [currentIndex, setCurrentIndex] = useState(0);
+  const { token } = useAuth();
 
   useEffect(() => {
-    const token = process.env.NEXT_PUBLIC_API_TOKEN ?? "";
+    if (!token) return;
     getSessionDetail(sessionId, token)
       .then((detail) => setState({ status: "ok", detail }))
       .catch((err: unknown) => {
@@ -28,7 +30,7 @@ export default function SessionDetailClient({ sessionId }: Props) {
           message: err instanceof Error ? err.message : "Unknown error",
         });
       });
-  }, [sessionId]);
+  }, [sessionId, token]);
 
   if (state.status === "loading") {
     return (

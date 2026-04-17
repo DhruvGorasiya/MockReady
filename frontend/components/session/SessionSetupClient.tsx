@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createSession } from "@/lib/api/sessions";
+import { useAuth } from "@/lib/auth/AuthContext";
 import type { InterviewType, InterviewRole } from "@/lib/types/session";
 
 const INTERVIEW_TYPES: { value: InterviewType; label: string }[] = [
@@ -19,6 +20,7 @@ const ROLES: { value: InterviewRole; label: string }[] = [
 
 export default function SessionSetupClient() {
   const router = useRouter();
+  const { token } = useAuth();
   const [interviewType, setInterviewType] = useState<InterviewType | "">("");
   const [role, setRole] = useState<InterviewRole | "">("");
   const [loading, setLoading] = useState(false);
@@ -27,11 +29,10 @@ export default function SessionSetupClient() {
   const canStart = interviewType !== "" && role !== "";
 
   async function handleStart() {
-    if (!canStart) return;
+    if (!canStart || !token) return;
     setLoading(true);
     setError(null);
     try {
-      const token = process.env.NEXT_PUBLIC_API_TOKEN ?? "";
       const session = await createSession(
         { interview_type: interviewType, role: role as InterviewRole, question_count: 3 },
         token,

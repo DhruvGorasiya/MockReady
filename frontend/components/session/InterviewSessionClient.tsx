@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getSessionDetail, submitAnswer } from "@/lib/api/sessions";
+import { useAuth } from "@/lib/auth/AuthContext";
 import type {
   AnswerFeedbackResponse,
   QuestionInSession,
@@ -24,6 +25,7 @@ const TIMER_SECONDS = 120;
 
 export default function InterviewSessionClient({ sessionId }: Props) {
   const router = useRouter();
+  const { token } = useAuth();
   const [phase, setPhase] = useState<Phase>({ stage: "loading" });
   const [questions, setQuestions] = useState<QuestionInSession[]>([]);
   const [answer, setAnswer] = useState("");
@@ -31,9 +33,8 @@ export default function InterviewSessionClient({ sessionId }: Props) {
   const [timeLeft, setTimeLeft] = useState(TIMER_SECONDS);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const token = process.env.NEXT_PUBLIC_API_TOKEN ?? "";
-
   useEffect(() => {
+    if (!token) return;
     getSessionDetail(sessionId, token)
       .then((detail) => {
         const sorted = [...detail.questions].sort((a, b) => a.order_index - b.order_index);
@@ -53,7 +54,7 @@ export default function InterviewSessionClient({ sessionId }: Props) {
       });
 
     return () => clearTimer();
-  }, [sessionId]);
+  }, [sessionId, token]);
 
   function startTimer() {
     setTimeLeft(TIMER_SECONDS);

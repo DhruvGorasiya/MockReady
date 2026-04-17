@@ -18,13 +18,13 @@ Audited 2026-04-17. Full details in `docs/p3-audit.md`.
 ### Must Build (blocking grade)
 - [x] CI/CD — `.github/workflows/ci.yml` (lint, typecheck, tests, security scan, Vercel deploy) ✓ DONE
 - [ ] Deployment — `vercel.json` + live Vercel URL
-- [ ] 2nd Custom Skill in `.claude/skills/`
+- [x] 2nd Custom Skill — `create-pr` with C.L.E.A.R. + AI disclosure ✓ DONE
 - [x] 2+ Hooks in `.claude/settings.json` (PostToolUse: ruff lint on .py edit; Stop: pytest gate) ✓ DONE
-- [ ] `.mcp.json` at repo root documenting Playwright MCP
+- [x] `.mcp.json` at repo root documenting Playwright MCP ✓ DONE
 - [ ] E2E test (at least 1 Playwright test)
 
 ### Should Build
-- [ ] `.claude/agents/` with at least 1 sub-agent (e.g., `test-writer`, `security-reviewer`)
+- [x] `.claude/agents/` — `security-reviewer` agent (OWASP Top 10) ✓ DONE
 - [ ] `CLAUDE.md` refactored to use `@imports` for modular organization
 - [ ] OWASP Top 10 section added to `CLAUDE.md`
 - [ ] Gitleaks pre-commit config + `npm audit` in CI

@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "playwright": {
+      "command": "npx",
+      "args": ["@playwright/mcp@latest"],
+      "description": "Playwright MCP server for browser automation and E2E test authoring. Used to record interactions, generate test selectors, and debug E2E failures in the MockReady frontend."
+    }
+  }
+}

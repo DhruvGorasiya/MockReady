@@ -10,10 +10,10 @@ Last updated: 2026-04-17
 |---|---|---|
 | **CLAUDE.md with `@imports`** | Partial | Exists, comprehensive — but no `@imports` for modular organization |
 | **Auto-memory system** | Yes ✓ | `.claude/MEMORY.md` index + 7 memory files created |
-| **2+ Custom Skills** | Partial | Only 1 skill (`review-endpoint`); v1→v2 iteration exists ✓ |
+| **2+ Custom Skills** | Yes ✓ | `review-endpoint` (v1→v2) + `create-pr` (C.L.E.A.R. + AI disclosure) |
 | **2+ Hooks (PreToolUse/PostToolUse + Stop)** | Yes ✓ | PostToolUse (ruff lint on .py edit) + Stop (pytest gate) |
-| **1+ MCP Server with `.mcp.json`** | Partial | Playwright traces exist but no `.mcp.json` config file |
-| **Custom Agents (`.claude/agents/`)** | No | App has AI agents (backend), but no Claude Code agents |
+| **1+ MCP Server with `.mcp.json`** | Yes ✓ | `.mcp.json` at repo root configures Playwright MCP server |
+| **Custom Agents (`.claude/agents/`)** | Yes ✓ | `security-reviewer` agent — OWASP Top 10 audit, no code modification |
 | **Worktree / Parallel Development** | No | Only `main` branch, no worktrees |
 | **TDD (red-green-refactor)** | Yes ✓ | Strong — 18 test files, commits labeled red/green/refactor |
 | **E2E Tests (Playwright)** | Yes ✓ | `playwright.config.ts` + 3 auth E2E tests passing locally and in CI |

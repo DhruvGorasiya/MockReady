@@ -43,15 +43,15 @@ Last updated: 2026-04-17
 ### High Priority (most points at risk)
 
 - [x] **CI/CD Pipeline** — `.github/workflows/ci.yml` with lint, typecheck, tests, security scan, Vercel deploy
-- [ ] **2nd Custom Skill** — add one more in `.claude/skills/` (e.g., `/add-feature`, `/create-pr`)
-- [ ] **2+ Hooks** — add in `.claude/settings.json` (e.g., auto-lint on edit, block pushes to main, run tests on stop)
-- [ ] **`.mcp.json`** — document the Playwright MCP server config at repo root
+- [x] **2nd Custom Skill** — `create-pr` skill with C.L.E.A.R. + AI disclosure metadata
+- [x] **2+ Hooks** — PostToolUse (ruff lint on .py edit) + Stop (pytest gate)
+- [x] **`.mcp.json`** — Playwright MCP server config at repo root
 - [ ] **Deployment** — `vercel.json` + deploy to Vercel for a public URL
 - [x] **E2E Tests** — at least 1 Playwright test
 
 ### Medium Priority
 
-- [ ] **Claude Code Agents** — create `.claude/agents/` with a sub-agent (e.g., `test-writer`, `security-reviewer`)
+- [x] **Claude Code Agents** — `security-reviewer` agent (OWASP Top 10 audit)
 - [ ] **`CLAUDE.md` `@imports`** — split into modular files and use `@docs/conventions.md` etc.
 - [ ] **OWASP Top 10** section added to `CLAUDE.md`
 - [ ] **Security tooling** — gitleaks pre-commit config, `npm audit` in CI

@@ -349,7 +349,7 @@ async def test_create_session_returns_session_create_response():
     db.commit = AsyncMock()
     db.refresh = AsyncMock()
 
-    response = await create_session(db, user_id=user_id, interview_type=InterviewType.behavioral)
+    response = await create_session(db, user_id=user_id, interview_type=InterviewType.behavioral, role=InterviewRole.SWE)
 
     assert isinstance(response, SessionCreateResponse)
 
@@ -363,7 +363,7 @@ async def test_create_session_response_has_required_fields():
     db.commit = AsyncMock()
     db.refresh = AsyncMock()
 
-    response = await create_session(db, user_id=user_id, interview_type=InterviewType.technical)
+    response = await create_session(db, user_id=user_id, interview_type=InterviewType.technical, role=InterviewRole.SWE)
 
     assert hasattr(response, "session_id")
     assert hasattr(response, "status")
@@ -380,7 +380,7 @@ async def test_create_session_sets_status_to_created():
     db.commit = AsyncMock()
     db.refresh = AsyncMock()
 
-    response = await create_session(db, user_id=user_id, interview_type=InterviewType.behavioral)
+    response = await create_session(db, user_id=user_id, interview_type=InterviewType.behavioral, role=InterviewRole.SWE)
 
     assert response.status == SessionStatus.created
 
@@ -394,7 +394,7 @@ async def test_create_session_persists_interview_type():
     db.commit = AsyncMock()
     db.refresh = AsyncMock()
 
-    response = await create_session(db, user_id=user_id, interview_type=InterviewType.mixed)
+    response = await create_session(db, user_id=user_id, interview_type=InterviewType.technical, role=InterviewRole.SWE)
 
     assert response.interview_type == InterviewType.mixed
 
@@ -408,7 +408,7 @@ async def test_create_session_adds_session_to_db_and_commits():
     db.commit = AsyncMock()
     db.refresh = AsyncMock()
 
-    await create_session(db, user_id=user_id, interview_type=InterviewType.technical)
+    await create_session(db, user_id=user_id, interview_type=InterviewType.technical, role=InterviewRole.SWE)
 
     db.add.assert_called_once()
     db.commit.assert_awaited_once()
@@ -425,7 +425,7 @@ async def test_create_session_session_id_is_uuid():
     db.commit = AsyncMock()
     db.refresh = AsyncMock()
 
-    response = await create_session(db, user_id=user_id, interview_type=InterviewType.behavioral)
+    response = await create_session(db, user_id=user_id, interview_type=InterviewType.behavioral, role=InterviewRole.SWE)
 
     assert isinstance(response.session_id, UUID)
 
@@ -439,6 +439,6 @@ async def test_create_session_created_at_is_datetime():
     db.commit = AsyncMock()
     db.refresh = AsyncMock()
 
-    response = await create_session(db, user_id=user_id, interview_type=InterviewType.behavioral)
+    response = await create_session(db, user_id=user_id, interview_type=InterviewType.behavioral, role=InterviewRole.SWE)
 
     assert isinstance(response.created_at, datetime)

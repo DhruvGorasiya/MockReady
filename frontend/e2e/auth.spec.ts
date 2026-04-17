@@ -23,6 +23,8 @@ test.describe("Authentication pages", () => {
     await page.getByLabel(/email/i).fill("invalid@test.com");
     await page.getByLabel(/password/i).fill("wrongpassword");
     await page.getByRole("button", { name: /sign in/i }).click();
-    await expect(page.getByRole("alert").or(page.locator("text=/error|invalid/i"))).toBeVisible({ timeout: 5000 });
+    await expect(
+      page.getByRole("alert").or(page.locator("text=/error|invalid/i")),
+    ).toBeVisible({ timeout: 5000 });
   });
 });

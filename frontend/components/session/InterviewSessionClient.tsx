@@ -100,7 +100,7 @@ export default function InterviewSessionClient({ sessionId }: Props) {
   }
 
   async function handleSubmit() {
-    if (phase.stage !== "answering" || !answer.trim()) return;
+    if (phase.stage !== "answering" || !answer.trim() || !token) return;
     clearTimer();
     setSubmitting(true);
     try {

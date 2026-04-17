@@ -30,11 +30,16 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
       <div className="w-full max-w-sm">
-        <h1 className="mb-8 text-2xl font-bold text-gray-900">Log in to MockReady</h1>
+        <h1 className="mb-8 text-2xl font-bold text-gray-900">
+          Log in to MockReady
+        </h1>
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Email
             </label>
             <input
@@ -48,7 +53,10 @@ export default function LoginPage() {
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Password
             </label>
             <input
@@ -78,7 +86,10 @@ export default function LoginPage() {
 
         <p className="mt-6 text-center text-sm text-gray-500">
           Don&apos;t have an account?{" "}
-          <Link href="/register" className="font-medium text-indigo-600 hover:underline">
+          <Link
+            href="/register"
+            className="font-medium text-indigo-600 hover:underline"
+          >
             Create an account
           </Link>
         </p>

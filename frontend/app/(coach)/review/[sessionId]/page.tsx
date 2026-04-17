@@ -26,7 +26,10 @@ export default function CoachSessionReviewPage({ params }: Props) {
     getSessionDetail(sessionId, token)
       .then((detail) => setState({ status: "ok", detail }))
       .catch((err: unknown) =>
-        setState({ status: "error", message: err instanceof Error ? err.message : "Failed to load" }),
+        setState({
+          status: "error",
+          message: err instanceof Error ? err.message : "Failed to load",
+        }),
       );
   }, [sessionId, token]);
 
@@ -35,7 +38,10 @@ export default function CoachSessionReviewPage({ params }: Props) {
     const updatedQuestions = state.detail.questions.map((q) =>
       q.id === updated.id ? updated : q,
     );
-    setState({ ...state, detail: { ...state.detail, questions: updatedQuestions } });
+    setState({
+      ...state,
+      detail: { ...state.detail, questions: updatedQuestions },
+    });
   }
 
   if (state.status === "loading") {
@@ -51,7 +57,9 @@ export default function CoachSessionReviewPage({ params }: Props) {
     );
   }
 
-  const sorted = [...state.detail.questions].sort((a, b) => a.order_index - b.order_index);
+  const sorted = [...state.detail.questions].sort(
+    (a, b) => a.order_index - b.order_index,
+  );
   const total = sorted.length;
   const question = sorted[currentIndex];
 
@@ -62,36 +70,59 @@ export default function CoachSessionReviewPage({ params }: Props) {
       <div className="flex items-center justify-between">
         <div>
           <p className="text-sm text-gray-500 capitalize">
-            {state.detail.interview_type.replace("_", " ")} · {state.detail.role}
+            {state.detail.interview_type.replace("_", " ")} ·{" "}
+            {state.detail.role}
           </p>
           <h1 className="mt-1 text-xl font-bold text-gray-900">Coach Review</h1>
         </div>
-        <span className="text-sm text-gray-400">Question {currentIndex + 1} of {total}</span>
+        <span className="text-sm text-gray-400">
+          Question {currentIndex + 1} of {total}
+        </span>
       </div>
 
       {/* Question */}
       <div className="rounded-lg border border-gray-200 bg-white p-5">
-        <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2">Question</p>
+        <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2">
+          Question
+        </p>
         <p className="text-gray-900">{question.question_text}</p>
       </div>
 
       {/* Candidate answer */}
       {question.candidate_answer && (
         <div className="rounded-lg border border-gray-200 bg-white p-5">
-          <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2">Candidate Answer</p>
-          <p className="text-sm text-gray-700 whitespace-pre-wrap">{question.candidate_answer}</p>
+          <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-2">
+            Candidate Answer
+          </p>
+          <p className="text-sm text-gray-700 whitespace-pre-wrap">
+            {question.candidate_answer}
+          </p>
         </div>
       )}
 
       {/* AI scores reference */}
       {question.ai_scores && (
         <div className="rounded-lg border border-gray-200 bg-white p-5">
-          <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-3">AI Scores</p>
+          <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-3">
+            AI Scores
+          </p>
           <div className="grid grid-cols-5 gap-2">
-            {(["clarity", "depth", "structure", "relevance", "communication_quality"] as const).map((dim) => (
+            {(
+              [
+                "clarity",
+                "depth",
+                "structure",
+                "relevance",
+                "communication_quality",
+              ] as const
+            ).map((dim) => (
               <div key={dim} className="text-center">
-                <p className="text-xs text-gray-500 capitalize mb-1">{dim.replace("_", " ")}</p>
-                <p className="text-lg font-bold text-indigo-600">{question.ai_scores![dim]}</p>
+                <p className="text-xs text-gray-500 capitalize mb-1">
+                  {dim.replace("_", " ")}
+                </p>
+                <p className="text-lg font-bold text-indigo-600">
+                  {question.ai_scores![dim]}
+                </p>
               </div>
             ))}
           </div>
@@ -100,7 +131,9 @@ export default function CoachSessionReviewPage({ params }: Props) {
 
       {/* Coach score form */}
       <div className="rounded-lg border border-gray-200 bg-white p-5">
-        <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-4">Override Scores</p>
+        <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 mb-4">
+          Override Scores
+        </p>
         <CoachScoreForm
           sessionId={sessionId}
           question={question}

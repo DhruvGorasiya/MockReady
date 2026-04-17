@@ -25,7 +25,9 @@ function AuthConsumer() {
       <span data-testid="authenticated">{String(auth.isAuthenticated)}</span>
       <span data-testid="token">{auth.token ?? "null"}</span>
       <button onClick={() => auth.login("a@b.com", "Password1")}>login</button>
-      <button onClick={() => auth.register("a@b.com", "Password1")}>register</button>
+      <button onClick={() => auth.register("a@b.com", "Password1")}>
+        register
+      </button>
       <button onClick={auth.logout}>logout</button>
     </div>
   );
@@ -77,7 +79,10 @@ describe("AuthContext", () => {
   });
 
   it("login stores token and sets isAuthenticated=true", async () => {
-    mockLogin.mockResolvedValue({ access_token: "new-token", token_type: "bearer" });
+    mockLogin.mockResolvedValue({
+      access_token: "new-token",
+      token_type: "bearer",
+    });
 
     render(
       <AuthProvider>
@@ -119,8 +124,15 @@ describe("AuthContext", () => {
   });
 
   it("register calls register API then auto-logs in", async () => {
-    mockRegister.mockResolvedValue({ id: "u1", email: "a@b.com", role: "candidate" });
-    mockLogin.mockResolvedValue({ access_token: "reg-token", token_type: "bearer" });
+    mockRegister.mockResolvedValue({
+      id: "u1",
+      email: "a@b.com",
+      role: "candidate",
+    });
+    mockLogin.mockResolvedValue({
+      access_token: "reg-token",
+      token_type: "bearer",
+    });
 
     render(
       <AuthProvider>
@@ -135,8 +147,14 @@ describe("AuthContext", () => {
       await userEvent.click(screen.getByText("register"));
     });
 
-    expect(mockRegister).toHaveBeenCalledWith({ email: "a@b.com", password: "Password1" });
-    expect(mockLogin).toHaveBeenCalledWith({ email: "a@b.com", password: "Password1" });
+    expect(mockRegister).toHaveBeenCalledWith({
+      email: "a@b.com",
+      password: "Password1",
+    });
+    expect(mockLogin).toHaveBeenCalledWith({
+      email: "a@b.com",
+      password: "Password1",
+    });
     expect(screen.getByTestId("authenticated")).toHaveTextContent("true");
   });
 });

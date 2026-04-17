@@ -22,14 +22,26 @@ const baseQuestion = {
   question_text: "Tell me about a project.",
   candidate_answer: "I led a team of five engineers...",
   order_index: 0,
-  ai_scores: { clarity: 7, depth: 6, structure: 7, relevance: 8, communication_quality: 6 },
+  ai_scores: {
+    clarity: 7,
+    depth: 6,
+    structure: 7,
+    relevance: 8,
+    communication_quality: 6,
+  },
   coach_scores: null,
   feedback: null,
 };
 
 const updatedQuestion = {
   ...baseQuestion,
-  coach_scores: { clarity: 9, depth: 8, structure: 9, relevance: 9, communication_quality: 8 },
+  coach_scores: {
+    clarity: 9,
+    depth: 8,
+    structure: 9,
+    relevance: 9,
+    communication_quality: 8,
+  },
 };
 
 beforeEach(() => jest.clearAllMocks());
@@ -58,7 +70,9 @@ describe("CoachScoreForm", () => {
         onScoreSubmitted={jest.fn()}
       />,
     );
-    expect(screen.getByRole("button", { name: /submit score/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /submit score/i }),
+    ).toBeInTheDocument();
   });
 
   it("pre-fills inputs with AI scores", () => {
@@ -84,7 +98,9 @@ describe("CoachScoreForm", () => {
       />,
     );
 
-    await userEvent.click(screen.getByRole("button", { name: /submit score/i }));
+    await userEvent.click(
+      screen.getByRole("button", { name: /submit score/i }),
+    );
 
     await waitFor(() => {
       expect(mockSubmit).toHaveBeenCalledWith(
@@ -108,7 +124,9 @@ describe("CoachScoreForm", () => {
       />,
     );
 
-    await userEvent.click(screen.getByRole("button", { name: /submit score/i }));
+    await userEvent.click(
+      screen.getByRole("button", { name: /submit score/i }),
+    );
 
     await waitFor(() => {
       expect(screen.getByText(/server error/i)).toBeInTheDocument();

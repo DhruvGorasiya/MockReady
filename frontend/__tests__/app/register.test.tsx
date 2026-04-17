@@ -39,7 +39,9 @@ describe("RegisterPage", () => {
 
   it("renders a submit button", () => {
     render(<RegisterPage />);
-    expect(screen.getByRole("button", { name: /create account/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /create account/i }),
+    ).toBeInTheDocument();
   });
 
   it("renders a link to the login page", () => {
@@ -52,8 +54,13 @@ describe("RegisterPage", () => {
 
     await userEvent.type(screen.getByLabelText(/email/i), "user@test.com");
     await userEvent.type(screen.getByLabelText(/^password/i), "Password1");
-    await userEvent.type(screen.getByLabelText(/confirm password/i), "Different1");
-    await userEvent.click(screen.getByRole("button", { name: /create account/i }));
+    await userEvent.type(
+      screen.getByLabelText(/confirm password/i),
+      "Different1",
+    );
+    await userEvent.click(
+      screen.getByRole("button", { name: /create account/i }),
+    );
 
     await waitFor(() => {
       expect(screen.getByText(/passwords do not match/i)).toBeInTheDocument();
@@ -75,8 +82,13 @@ describe("RegisterPage", () => {
 
     await userEvent.type(screen.getByLabelText(/email/i), "user@test.com");
     await userEvent.type(screen.getByLabelText(/^password/i), "Password1");
-    await userEvent.type(screen.getByLabelText(/confirm password/i), "Password1");
-    await userEvent.click(screen.getByRole("button", { name: /create account/i }));
+    await userEvent.type(
+      screen.getByLabelText(/confirm password/i),
+      "Password1",
+    );
+    await userEvent.click(
+      screen.getByRole("button", { name: /create account/i }),
+    );
 
     await waitFor(() => {
       expect(mockRegister).toHaveBeenCalledWith("user@test.com", "Password1");
@@ -84,7 +96,9 @@ describe("RegisterPage", () => {
   });
 
   it("shows an error message when register throws", async () => {
-    const mockRegister = jest.fn().mockRejectedValue(new Error("Email already registered"));
+    const mockRegister = jest
+      .fn()
+      .mockRejectedValue(new Error("Email already registered"));
     mockUseAuth.mockReturnValue({
       isAuthenticated: false,
       isLoading: false,
@@ -98,8 +112,13 @@ describe("RegisterPage", () => {
 
     await userEvent.type(screen.getByLabelText(/email/i), "user@test.com");
     await userEvent.type(screen.getByLabelText(/^password/i), "Password1");
-    await userEvent.type(screen.getByLabelText(/confirm password/i), "Password1");
-    await userEvent.click(screen.getByRole("button", { name: /create account/i }));
+    await userEvent.type(
+      screen.getByLabelText(/confirm password/i),
+      "Password1",
+    );
+    await userEvent.click(
+      screen.getByRole("button", { name: /create account/i }),
+    );
 
     await waitFor(() => {
       expect(screen.getByText(/email already registered/i)).toBeInTheDocument();

@@ -1,5 +1,8 @@
 import { apiFetch } from "@/lib/api/client";
-import type { QuestionResult, SessionHistoryResponse } from "@/lib/types/session";
+import type {
+  QuestionResult,
+  SessionHistoryResponse,
+} from "@/lib/types/session";
 
 const BASE = "/api/v1/coach";
 
@@ -14,7 +17,9 @@ export interface CoachScoreRequest {
   justification?: string;
 }
 
-export async function getSessionsForReview(token: string): Promise<SessionHistoryResponse> {
+export async function getSessionsForReview(
+  token: string,
+): Promise<SessionHistoryResponse> {
   return apiFetch<SessionHistoryResponse>(`${BASE}/sessions`, {}, token);
 }
 

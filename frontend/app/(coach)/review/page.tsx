@@ -20,7 +20,10 @@ export default function CoachReviewPage() {
     getSessionsForReview(token)
       .then((data) => setState({ status: "ok", data }))
       .catch((err: unknown) =>
-        setState({ status: "error", message: err instanceof Error ? err.message : "Failed to load" }),
+        setState({
+          status: "error",
+          message: err instanceof Error ? err.message : "Failed to load",
+        }),
       );
   }, [token]);
 
@@ -43,7 +46,9 @@ export default function CoachReviewPage() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-gray-900">Sessions to Review</h1>
-        <p className="mt-1 text-sm text-gray-500">{total} session{total !== 1 ? "s" : ""} awaiting coach review</p>
+        <p className="mt-1 text-sm text-gray-500">
+          {total} session{total !== 1 ? "s" : ""} awaiting coach review
+        </p>
       </div>
 
       {total === 0 ? (
@@ -71,10 +76,14 @@ export default function CoachReviewPage() {
                   {session.composite_score != null && (
                     <p className="text-lg font-semibold text-indigo-600">
                       {session.composite_score.toFixed(1)}
-                      <span className="text-sm font-normal text-gray-400">/10</span>
+                      <span className="text-sm font-normal text-gray-400">
+                        /10
+                      </span>
                     </p>
                   )}
-                  <span className="text-xs text-amber-600 font-medium">Needs review →</span>
+                  <span className="text-xs text-amber-600 font-medium">
+                    Needs review →
+                  </span>
                 </div>
               </div>
             </Link>

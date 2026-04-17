@@ -11,7 +11,10 @@ interface Props {
   onScoreSubmitted: (updated: QuestionResult) => void;
 }
 
-const DIMENSIONS: { key: keyof NonNullable<QuestionResult["ai_scores"]>; label: string }[] = [
+const DIMENSIONS: {
+  key: keyof NonNullable<QuestionResult["ai_scores"]>;
+  label: string;
+}[] = [
   { key: "clarity", label: "Clarity" },
   { key: "depth", label: "Depth" },
   { key: "structure", label: "Structure" },
@@ -19,7 +22,11 @@ const DIMENSIONS: { key: keyof NonNullable<QuestionResult["ai_scores"]>; label: 
   { key: "communication_quality", label: "Communication Quality" },
 ];
 
-export default function CoachScoreForm({ sessionId, question, onScoreSubmitted }: Props) {
+export default function CoachScoreForm({
+  sessionId,
+  question,
+  onScoreSubmitted,
+}: Props) {
   const { token } = useAuth();
   const ai = question.ai_scores;
 
@@ -80,7 +87,10 @@ export default function CoachScoreForm({ sessionId, question, onScoreSubmitted }
               max={10}
               value={scores[key]}
               onChange={(e) =>
-                setScores((prev) => ({ ...prev, [key]: Number(e.target.value) }))
+                setScores((prev) => ({
+                  ...prev,
+                  [key]: Number(e.target.value),
+                }))
               }
               className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
             />
@@ -89,7 +99,10 @@ export default function CoachScoreForm({ sessionId, question, onScoreSubmitted }
       </div>
 
       <div>
-        <label htmlFor="justification" className="block text-sm font-medium text-gray-700 mb-1">
+        <label
+          htmlFor="justification"
+          className="block text-sm font-medium text-gray-700 mb-1"
+        >
           Justification (optional)
         </label>
         <textarea

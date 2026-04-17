@@ -4,7 +4,11 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth/AuthContext";
 
-export default function CoachLayout({ children }: { children: React.ReactNode }) {
+export default function CoachLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const router = useRouter();
   const { isAuthenticated, isLoading, logout } = useAuth();
 
@@ -29,7 +33,9 @@ export default function CoachLayout({ children }: { children: React.ReactNode })
       <nav className="border-b border-gray-200 bg-white px-4 py-3">
         <div className="mx-auto flex max-w-4xl items-center justify-between">
           <div className="flex items-center gap-4">
-            <a href="/dashboard" className="text-sm font-bold text-indigo-600">MockReady</a>
+            <a href="/dashboard" className="text-sm font-bold text-indigo-600">
+              MockReady
+            </a>
             <span className="rounded-full bg-purple-100 px-2.5 py-0.5 text-xs font-medium text-purple-700">
               Coach
             </span>

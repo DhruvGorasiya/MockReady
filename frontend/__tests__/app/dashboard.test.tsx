@@ -18,7 +18,11 @@ jest.mock("@/lib/api/sessions", () => ({
 }));
 
 jest.mock("@/lib/auth/AuthContext", () => ({
-  useAuth: jest.fn(() => ({ token: "test-token", isAuthenticated: true, isLoading: false })),
+  useAuth: jest.fn(() => ({
+    token: "test-token",
+    isAuthenticated: true,
+    isLoading: false,
+  })),
 }));
 
 import * as sessionsApi from "@/lib/api/sessions";

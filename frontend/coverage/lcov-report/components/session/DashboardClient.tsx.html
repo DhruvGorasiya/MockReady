@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">95.45% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>19/19</span>
+                <span class='fraction'>21/22</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">85.71% </span>
+                <span class="strong">66.66% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>6/7</span>
+                <span class='fraction'>4/6</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>19/19</span>
+                <span class='fraction'>21/21</span>
             </div>
         
             
@@ -144,10 +144,18 @@
 <a name='L79'></a><a href='#L79'>79</a>
 <a name='L80'></a><a href='#L80'>80</a>
 <a name='L81'></a><a href='#L81'>81</a>
-<a name='L82'></a><a href='#L82'>82</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L82'></a><a href='#L82'>82</a>
+<a name='L83'></a><a href='#L83'>83</a>
+<a name='L84'></a><a href='#L84'>84</a>
+<a name='L85'></a><a href='#L85'>85</a>
+<a name='L86'></a><a href='#L86'>86</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -160,16 +168,14 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">9x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -216,6 +222,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -229,7 +237,11 @@
 &nbsp;
 import { useEffect, useState } from "react";
 import { getScoreTrends, getSessionHistory } from "@/lib/api/sessions";
-import type { SessionHistoryResponse, TrendResponse } from "@/lib/types/session";
+import { useAuth } from "@/lib/auth/AuthContext";
+import type {
+  SessionHistoryResponse,
+  TrendResponse,
+} from "@/lib/types/session";
 import EmptySessionState from "@/components/session/EmptySessionState";
 import SessionCard from "@/components/session/SessionCard";
 import TrendChart from "@/components/session/TrendChart";
@@ -241,22 +253,20 @@ type State =
 &nbsp;
 export default function DashboardClient() {
   const [state, setState] = useState&lt;State&gt;({ status: "loading" });
+  const { token } = useAuth();
 &nbsp;
   useEffect(() =&gt; {
-    // Token is sourced from the session cookie/storage in a real auth flow.
-    // For now, read from env so the component stays testable without auth.
-    const token = process.env.NEXT_PUBLIC_API_TOKEN ?? "";
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (!token) <span class="cstat-no" title="statement not covered" >return;</span>
 &nbsp;
     Promise.all([getSessionHistory(token), getScoreTrends(token)])
       .then(([history, trends]) =&gt; {
         setState({ status: "ok", history, trends });
       })
       .catch((err: unknown) =&gt; {
-        const message =
-          err instanceof Error ? err.message : <span class="branch-1 cbranch-no" title="branch not covered" >"Unknown error";</span>
+        const message = err instanceof Error ? err.message : <span class="branch-1 cbranch-no" title="branch not covered" >"Unknown error";</span>
         setState({ status: "error", message });
       });
-  }, []);
+  }, [token]);
 &nbsp;
   if (state.status === "loading") {
     return (
@@ -284,7 +294,9 @@ export default function DashboardClient() {
   return (
     &lt;div className="space-y-8"&gt;
       &lt;section&gt;
-        &lt;h2 className="mb-4 text-lg font-semibold text-gray-800"&gt;Score Trend&lt;/h2&gt;
+        &lt;h2 className="mb-4 text-lg font-semibold text-gray-800"&gt;
+          Score Trend
+        &lt;/h2&gt;
         &lt;TrendChart points={trends.points} /&gt;
       &lt;/section&gt;
 &nbsp;
@@ -313,7 +325,7 @@ export default function DashboardClient() {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-03-23T04:19:48.541Z
+                at 2026-04-17T22:46:07.907Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

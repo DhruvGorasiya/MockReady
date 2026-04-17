@@ -37,11 +37,16 @@ export default function RegisterPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
       <div className="w-full max-w-sm">
-        <h1 className="mb-8 text-2xl font-bold text-gray-900">Create your account</h1>
+        <h1 className="mb-8 text-2xl font-bold text-gray-900">
+          Create your account
+        </h1>
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Email
             </label>
             <input
@@ -55,7 +60,10 @@ export default function RegisterPage() {
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Password
             </label>
             <input
@@ -69,7 +77,10 @@ export default function RegisterPage() {
           </div>
 
           <div>
-            <label htmlFor="confirm" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="confirm"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Confirm Password
             </label>
             <input
@@ -99,7 +110,10 @@ export default function RegisterPage() {
 
         <p className="mt-6 text-center text-sm text-gray-500">
           Already have an account?{" "}
-          <Link href="/login" className="font-medium text-indigo-600 hover:underline">
+          <Link
+            href="/login"
+            className="font-medium text-indigo-600 hover:underline"
+          >
             Log in
           </Link>
         </p>

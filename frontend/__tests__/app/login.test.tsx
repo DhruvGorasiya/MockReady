@@ -43,7 +43,9 @@ describe("LoginPage", () => {
 
   it("renders a link to the register page", () => {
     render(<LoginPage />);
-    expect(screen.getByRole("link", { name: /create an account/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: /create an account/i }),
+    ).toBeInTheDocument();
   });
 
   it("calls login with email and password on submit", async () => {
@@ -69,7 +71,9 @@ describe("LoginPage", () => {
   });
 
   it("shows an error message when login throws", async () => {
-    const mockLogin = jest.fn().mockRejectedValue(new Error("Invalid credentials"));
+    const mockLogin = jest
+      .fn()
+      .mockRejectedValue(new Error("Invalid credentials"));
     mockUseAuth.mockReturnValue({
       isAuthenticated: false,
       isLoading: false,

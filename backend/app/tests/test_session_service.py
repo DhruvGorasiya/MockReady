@@ -396,7 +396,7 @@ async def test_create_session_persists_interview_type():
 
     response = await create_session(db, user_id=user_id, interview_type=InterviewType.technical, role=InterviewRole.SWE)
 
-    assert response.interview_type == InterviewType.mixed
+    assert response.interview_type == InterviewType.technical
 
 
 @pytest.mark.asyncio

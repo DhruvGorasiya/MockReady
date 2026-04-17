@@ -122,7 +122,6 @@ def test_coach_score_returns_403_for_candidate_user():
 
 
 def test_coach_score_returns_401_without_auth():
-    from app.core.security import get_current_user
     from app.core.db import get_db
 
     app = FastAPI()
@@ -134,10 +133,12 @@ def test_coach_score_returns_401_without_auth():
     app.dependency_overrides[get_db] = _override_db
     client = TestClient(app, raise_server_exceptions=False)
 
-    resp = client.post(
-        f"/api/v1/coach/sessions/{uuid4()}/questions/{uuid4()}/score",
-        json={"scores": {"clarity": 9, "depth": 8, "structure": 9, "relevance": 8, "communication_quality": 9}},
-    )
+    with patch("app.core.security.settings") as mock_settings:
+        mock_settings.dev_bypass_auth = False
+        resp = client.post(
+            f"/api/v1/coach/sessions/{uuid4()}/questions/{uuid4()}/score",
+            json={"scores": {"clarity": 9, "depth": 8, "structure": 9, "relevance": 8, "communication_quality": 9}},
+        )
 
     assert resp.status_code == 401
 

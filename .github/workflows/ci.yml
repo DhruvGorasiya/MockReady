@@ -106,7 +106,6 @@ jobs:
   e2e:
     name: E2E — Playwright
     runs-on: ubuntu-latest
-    continue-on-error: true
     defaults:
       run:
         working-directory: frontend

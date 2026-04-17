@@ -9,7 +9,7 @@ Last updated: 2026-04-17
 | Requirement | Status | Notes |
 |---|---|---|
 | **CLAUDE.md with `@imports`** | Partial | Exists, comprehensive — but no `@imports` for modular organization |
-| **Auto-memory system** | No | No `MEMORY.md` or `memory/` folder in `.claude/` |
+| **Auto-memory system** | Yes ✓ | `.claude/MEMORY.md` index + 7 memory files created |
 | **2+ Custom Skills** | Partial | Only 1 skill (`review-endpoint`); v1→v2 iteration exists ✓ |
 | **2+ Hooks (PreToolUse/PostToolUse + Stop)** | No | `.claude/settings.json` only has permissions, no hooks |
 | **1+ MCP Server with `.mcp.json`** | Partial | Playwright traces exist but no `.mcp.json` config file |

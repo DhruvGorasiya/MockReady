@@ -16,10 +16,10 @@ Audited 2026-04-17. Full details in `docs/p3-audit.md`.
 ## Still Needed
 
 ### Must Build (blocking grade)
-- [ ] CI/CD — `.github/workflows/ci.yml` (lint, typecheck, tests, security scan, Vercel deploy)
+- [x] CI/CD — `.github/workflows/ci.yml` (lint, typecheck, tests, security scan, Vercel deploy) ✓ DONE
 - [ ] Deployment — `vercel.json` + live Vercel URL
 - [ ] 2nd Custom Skill in `.claude/skills/`
-- [ ] 2+ Hooks in `.claude/settings.json` (PreToolUse/PostToolUse + Stop hook)
+- [x] 2+ Hooks in `.claude/settings.json` (PostToolUse: ruff lint on .py edit; Stop: pytest gate) ✓ DONE
 - [ ] `.mcp.json` at repo root documenting Playwright MCP
 - [ ] E2E test (at least 1 Playwright test)
 

@@ -19,5 +19,28 @@
       "Bash(curl:*)",
       "Bash(wget:*)"
     ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "file=\"$CLAUDE_TOOL_INPUT_FILE_PATH\"; if [[ \"$file\" == *.py ]]; then cd backend && uv run ruff check \"${file#*/backend/}\" --fix-only -q; fi"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd backend && uv run pytest app/tests/ -q --tb=short 2>&1 | tail -5"
+          }
+        ]
+      }
+    ]
   }
 }

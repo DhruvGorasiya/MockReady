@@ -11,15 +11,15 @@ Last updated: 2026-04-17
 | **CLAUDE.md with `@imports`** | Partial | Exists, comprehensive — but no `@imports` for modular organization |
 | **Auto-memory system** | Yes ✓ | `.claude/MEMORY.md` index + 7 memory files created |
 | **2+ Custom Skills** | Partial | Only 1 skill (`review-endpoint`); v1→v2 iteration exists ✓ |
-| **2+ Hooks (PreToolUse/PostToolUse + Stop)** | No | `.claude/settings.json` only has permissions, no hooks |
+| **2+ Hooks (PreToolUse/PostToolUse + Stop)** | Yes ✓ | PostToolUse (ruff lint on .py edit) + Stop (pytest gate) |
 | **1+ MCP Server with `.mcp.json`** | Partial | Playwright traces exist but no `.mcp.json` config file |
 | **Custom Agents (`.claude/agents/`)** | No | App has AI agents (backend), but no Claude Code agents |
 | **Worktree / Parallel Development** | No | Only `main` branch, no worktrees |
 | **TDD (red-green-refactor)** | Yes ✓ | Strong — 18 test files, commits labeled red/green/refactor |
-| **E2E Tests (Playwright)** | No | No `playwright.config.ts`, no e2e tests |
-| **70%+ Test Coverage** | Partial | Good unit tests, but no coverage report generated |
-| **CI/CD (GitHub Actions, all 8 stages)** | No | No `.github/workflows/` at all |
-| **Security (4 of 8 gates)** | No | No gitleaks, no SAST, no formal tooling |
+| **E2E Tests (Playwright)** | Yes ✓ | `playwright.config.ts` + 3 auth E2E tests passing locally and in CI |
+| **70%+ Test Coverage** | Yes ✓ | Backend 70% enforced via pytest-cov; frontend 70% enforced via Jest threshold |
+| **CI/CD (GitHub Actions, all 8 stages)** | Yes ✓ | Full pipeline: lint, typecheck, unit tests, security scan, gitleaks, E2E, AI review, Vercel deploy |
+| **Security (4 of 8 gates)** | Yes ✓ | `npm audit --audit-level=critical` + Gitleaks secrets scan in CI |
 | **Deployed on Vercel** | No | No `vercel.json`, no public URL |
 | **2 Sprints with planning + retros** | No | Tasks tracked but no sprint structure |
 | **GitHub Issues + standups** | No | No issue templates, no standup logs |
@@ -42,12 +42,12 @@ Last updated: 2026-04-17
 
 ### High Priority (most points at risk)
 
-- [ ] **CI/CD Pipeline** — `.github/workflows/ci.yml` with lint, typecheck, tests, security scan, Vercel deploy
+- [x] **CI/CD Pipeline** — `.github/workflows/ci.yml` with lint, typecheck, tests, security scan, Vercel deploy
 - [ ] **2nd Custom Skill** — add one more in `.claude/skills/` (e.g., `/add-feature`, `/create-pr`)
 - [ ] **2+ Hooks** — add in `.claude/settings.json` (e.g., auto-lint on edit, block pushes to main, run tests on stop)
 - [ ] **`.mcp.json`** — document the Playwright MCP server config at repo root
 - [ ] **Deployment** — `vercel.json` + deploy to Vercel for a public URL
-- [ ] **E2E Tests** — at least 1 Playwright test
+- [x] **E2E Tests** — at least 1 Playwright test
 
 ### Medium Priority
 

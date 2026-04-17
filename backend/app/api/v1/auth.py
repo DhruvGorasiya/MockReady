@@ -1,3 +1,4 @@
+import logging
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, status
@@ -20,7 +21,6 @@ async def register(
     except HTTPException:
         raise
     except Exception as exc:
-        import logging
         logging.getLogger(__name__).exception("Registration failed: %s", exc)
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,

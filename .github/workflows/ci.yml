@@ -17,7 +17,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v3
-      - run: uv sync
+      - run: uv sync --dev
       - run: uv run ruff check app/
 
   backend-tests:
@@ -34,7 +34,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v3
-      - run: uv sync
+      - run: uv sync --dev
       - run: uv run pytest app/tests/ -v --cov=app --cov-report=term-missing --cov-fail-under=70
 
   # ── Frontend ───────────────────────────────────────────────────────────────

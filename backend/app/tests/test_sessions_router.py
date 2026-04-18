@@ -18,7 +18,7 @@ from app.schemas.session import (
     AnswerFeedbackResponse,
     DimensionFeedback,
     DimensionScores,
-    SessionCreateResponse,
+    SessionCreatedResponse,
     SessionDetail,
     SessionHistoryResponse,
     SessionSummary,
@@ -256,15 +256,16 @@ def test_create_session_returns_422_for_invalid_interview_type(authed_client):
 
 def test_create_session_returns_201(authed_client):
     test_client, user = authed_client
-    session_response = SessionCreateResponse(
-        session_id=uuid4(),
-        status=SessionStatus.created,
+    session_response = SessionCreatedResponse(
+        id=uuid4(),
+        status=SessionStatus.in_progress,
         interview_type=InterviewType.behavioral,
-        created_at=datetime(2026, 1, 1, tzinfo=timezone.utc),
+        role=InterviewRole.SWE,
+        questions=[],
     )
 
     with patch(
-        "app.api.v1.sessions.session_service.create_session",
+        "app.api.v1.sessions.session_service.create_session_with_questions",
         new=AsyncMock(return_value=session_response),
     ):
         response = test_client.post(
@@ -273,14 +274,14 @@ def test_create_session_returns_201(authed_client):
         )
 
     assert response.status_code == 201
-    assert response.json()["status"] == "created"
+    assert response.json()["status"] == "in_progress"
 
 
 def test_create_session_returns_500_on_service_error(authed_client):
     test_client, _ = authed_client
 
     with patch(
-        "app.api.v1.sessions.session_service.create_session",
+        "app.api.v1.sessions.session_service.create_session_with_questions",
         new=AsyncMock(side_effect=RuntimeError("db exploded")),
     ):
         response = test_client.post(

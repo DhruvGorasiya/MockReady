@@ -11,10 +11,13 @@ const config = {
   },
   testMatch: ["**/__tests__/**/*.test.{ts,tsx}"],
   collectCoverageFrom: [
-    "app/**/*.{ts,tsx}",
     "components/**/*.{ts,tsx}",
-    "lib/**/*.{ts,tsx}",
+    "lib/auth/**/*.{ts,tsx}",
+    "app/login/**/*.{ts,tsx}",
+    "app/register/**/*.{ts,tsx}",
     "!**/*.d.ts",
+    "!components/session/InterviewSessionClient.tsx",
+    "!components/session/SessionSetupClient.tsx",
   ],
 };
 

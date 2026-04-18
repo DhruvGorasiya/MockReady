@@ -9,6 +9,14 @@ jest.mock("@/lib/api/sessions", () => ({
   getSessionDetail: jest.fn(),
 }));
 
+jest.mock("@/lib/auth/AuthContext", () => ({
+  useAuth: jest.fn(() => ({
+    token: "test-token",
+    isAuthenticated: true,
+    isLoading: false,
+  })),
+}));
+
 import * as sessionsApi from "@/lib/api/sessions";
 
 const mockGetSessionDetail = sessionsApi.getSessionDetail as jest.Mock;

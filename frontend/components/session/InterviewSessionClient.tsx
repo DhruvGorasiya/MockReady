@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getSessionDetail, submitAnswer } from "@/lib/api/sessions";
+import { useAuth } from "@/lib/auth/AuthContext";
 import type {
   AnswerFeedbackResponse,
   QuestionInSession,
@@ -16,14 +17,26 @@ interface Props {
 type Phase =
   | { stage: "loading" }
   | { stage: "error"; message: string }
-  | { stage: "answering"; question: QuestionInSession; index: number; total: number }
-  | { stage: "feedback"; feedback: AnswerFeedbackResponse; question: QuestionInSession; index: number; total: number }
+  | {
+      stage: "answering";
+      question: QuestionInSession;
+      index: number;
+      total: number;
+    }
+  | {
+      stage: "feedback";
+      feedback: AnswerFeedbackResponse;
+      question: QuestionInSession;
+      index: number;
+      total: number;
+    }
   | { stage: "complete" };
 
 const TIMER_SECONDS = 120;
 
 export default function InterviewSessionClient({ sessionId }: Props) {
   const router = useRouter();
+  const { token } = useAuth();
   const [phase, setPhase] = useState<Phase>({ stage: "loading" });
   const [questions, setQuestions] = useState<QuestionInSession[]>([]);
   const [answer, setAnswer] = useState("");
@@ -31,29 +44,39 @@ export default function InterviewSessionClient({ sessionId }: Props) {
   const [timeLeft, setTimeLeft] = useState(TIMER_SECONDS);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const token = process.env.NEXT_PUBLIC_API_TOKEN ?? "";
-
   useEffect(() => {
+    if (!token) return;
     getSessionDetail(sessionId, token)
       .then((detail) => {
-        const sorted = [...detail.questions].sort((a, b) => a.order_index - b.order_index);
+        const sorted = [...detail.questions].sort(
+          (a, b) => a.order_index - b.order_index,
+        );
         setQuestions(sorted);
         if (sorted.length === 0) {
-          setPhase({ stage: "error", message: "No questions found for this session." });
+          setPhase({
+            stage: "error",
+            message: "No questions found for this session.",
+          });
         } else {
-          setPhase({ stage: "answering", question: sorted[0], index: 0, total: sorted.length });
+          setPhase({
+            stage: "answering",
+            question: sorted[0],
+            index: 0,
+            total: sorted.length,
+          });
           startTimer();
         }
       })
       .catch((err: unknown) => {
         setPhase({
           stage: "error",
-          message: err instanceof Error ? err.message : "Failed to load session",
+          message:
+            err instanceof Error ? err.message : "Failed to load session",
         });
       });
 
     return () => clearTimer();
-  }, [sessionId]);
+  }, [sessionId, token]); // eslint-disable-line react-hooks/exhaustive-deps
 
   function startTimer() {
     setTimeLeft(TIMER_SECONDS);
@@ -77,7 +100,7 @@ export default function InterviewSessionClient({ sessionId }: Props) {
   }
 
   async function handleSubmit() {
-    if (phase.stage !== "answering" || !answer.trim()) return;
+    if (phase.stage !== "answering" || !answer.trim() || !token) return;
     clearTimer();
     setSubmitting(true);
     try {
@@ -87,7 +110,13 @@ export default function InterviewSessionClient({ sessionId }: Props) {
         { answer: answer.trim() },
         token,
       );
-      setPhase({ stage: "feedback", feedback, question: phase.question, index: phase.index, total: phase.total });
+      setPhase({
+        stage: "feedback",
+        feedback,
+        question: phase.question,
+        index: phase.index,
+        total: phase.total,
+      });
     } catch (err: unknown) {
       setPhase({
         stage: "error",
@@ -111,12 +140,21 @@ export default function InterviewSessionClient({ sessionId }: Props) {
       return;
     }
     setAnswer("");
-    setPhase({ stage: "answering", question: nextQuestion, index: nextIndex, total: phase.total });
+    setPhase({
+      stage: "answering",
+      question: nextQuestion,
+      index: nextIndex,
+      total: phase.total,
+    });
     startTimer();
   }
 
   const timerColor =
-    timeLeft <= 30 ? "text-red-500" : timeLeft <= 60 ? "text-amber-500" : "text-gray-500";
+    timeLeft <= 30
+      ? "text-red-500"
+      : timeLeft <= 60
+        ? "text-amber-500"
+        : "text-gray-500";
 
   if (phase.stage === "loading") {
     return (
@@ -139,7 +177,9 @@ export default function InterviewSessionClient({ sessionId }: Props) {
     return (
       <div className="mx-auto max-w-lg py-20 text-center">
         <div className="text-5xl mb-4">🎉</div>
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">Session Complete!</h1>
+        <h1 className="text-2xl font-bold text-gray-900 mb-2">
+          Session Complete!
+        </h1>
         <p className="text-gray-500 mb-8 text-sm">
           Your answers have been evaluated. View your scores on the dashboard.
         </p>
@@ -159,7 +199,9 @@ export default function InterviewSessionClient({ sessionId }: Props) {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-bold text-gray-900">Feedback</h2>
-          <span className="text-sm text-gray-400">Question {index + 1} of {total}</span>
+          <span className="text-sm text-gray-400">
+            Question {index + 1} of {total}
+          </span>
         </div>
 
         {/* Composite score */}
@@ -173,26 +215,54 @@ export default function InterviewSessionClient({ sessionId }: Props) {
 
         {/* Summary */}
         <div className="rounded-lg border border-gray-200 bg-white p-5">
-          <p className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">Summary</p>
-          <p className="text-gray-700 text-sm leading-relaxed">{feedback.feedback_summary}</p>
+          <p className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">
+            Summary
+          </p>
+          <p className="text-gray-700 text-sm leading-relaxed">
+            {feedback.feedback_summary}
+          </p>
         </div>
 
         {/* Dimension scores */}
         <div className="rounded-lg border border-gray-200 bg-white p-5 space-y-3">
-          <p className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">Scores</p>
+          <p className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-1">
+            Scores
+          </p>
           {(
             [
-              ["Clarity", feedback.ai_scores.clarity, feedback.dimension_feedback.clarity],
-              ["Depth", feedback.ai_scores.depth, feedback.dimension_feedback.depth],
-              ["Structure", feedback.ai_scores.structure, feedback.dimension_feedback.structure],
-              ["Relevance", feedback.ai_scores.relevance, feedback.dimension_feedback.relevance],
-              ["Communication", feedback.ai_scores.communication_quality, feedback.dimension_feedback.communication_quality],
+              [
+                "Clarity",
+                feedback.ai_scores.clarity,
+                feedback.dimension_feedback.clarity,
+              ],
+              [
+                "Depth",
+                feedback.ai_scores.depth,
+                feedback.dimension_feedback.depth,
+              ],
+              [
+                "Structure",
+                feedback.ai_scores.structure,
+                feedback.dimension_feedback.structure,
+              ],
+              [
+                "Relevance",
+                feedback.ai_scores.relevance,
+                feedback.dimension_feedback.relevance,
+              ],
+              [
+                "Communication",
+                feedback.ai_scores.communication_quality,
+                feedback.dimension_feedback.communication_quality,
+              ],
             ] as [string, number, string][]
           ).map(([label, score, fb]) => (
             <div key={label}>
               <div className="flex items-center justify-between mb-1">
                 <span className="text-sm text-gray-700">{label}</span>
-                <span className="text-sm font-semibold text-gray-900">{score}/10</span>
+                <span className="text-sm font-semibold text-gray-900">
+                  {score}/10
+                </span>
               </div>
               <div className="h-1.5 rounded-full bg-gray-100 mb-1">
                 <div
@@ -210,7 +280,9 @@ export default function InterviewSessionClient({ sessionId }: Props) {
           <p className="text-xs font-semibold text-amber-700 uppercase tracking-wide mb-1">
             Improvement Tip
           </p>
-          <p className="text-sm text-amber-800">{feedback.improvement_suggestion}</p>
+          <p className="text-sm text-amber-800">
+            {feedback.improvement_suggestion}
+          </p>
         </div>
 
         <button
@@ -240,12 +312,18 @@ export default function InterviewSessionClient({ sessionId }: Props) {
       </div>
 
       <div className="rounded-lg border border-gray-200 bg-white p-5">
-        <p className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">Question</p>
-        <p className="text-gray-900 leading-relaxed">{question.question_text}</p>
+        <p className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-2">
+          Question
+        </p>
+        <p className="text-gray-900 leading-relaxed">
+          {question.question_text}
+        </p>
       </div>
 
       <div>
-        <label className="block text-sm font-semibold text-gray-700 mb-2">Your Answer</label>
+        <label className="block text-sm font-semibold text-gray-700 mb-2">
+          Your Answer
+        </label>
         <textarea
           value={answer}
           onChange={(e) => setAnswer(e.target.value)}

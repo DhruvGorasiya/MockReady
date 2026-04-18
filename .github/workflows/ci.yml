@@ -1,0 +1,173 @@
+name: CI
+
+on:
+  push:
+    branches: ["main", "fix/**", "feature/**", "chore/**"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  # ── Backend ────────────────────────────────────────────────────────────────
+  backend-tests:
+    name: Backend — Unit Tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    env:
+      DATABASE_URL: postgresql+asyncpg://postgres:postgres@localhost:5432/mockready_test
+      SUPABASE_JWT_SECRET: test-secret-for-ci
+      ANTHROPIC_API_KEY: test-key-for-ci
+      DEV_BYPASS_AUTH: "false"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+      - run: uv sync --extra dev
+      - run: uv run pytest app/tests/ -v --cov=app --cov-report=term-missing --cov-fail-under=70
+
+  # ── Frontend ───────────────────────────────────────────────────────────────
+  frontend-lint:
+    name: Frontend — Lint (ESLint + Prettier)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npm run lint
+
+  frontend-typecheck:
+    name: Frontend — Type Check (tsc)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npx tsc --noEmit
+
+  frontend-tests:
+    name: Frontend — Unit Tests (Jest)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npm test -- --coverage --coverageThreshold='{"global":{"lines":70}}'
+
+  # ── Security ───────────────────────────────────────────────────────────────
+  security-scan:
+    name: Security — npm audit
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npm audit --audit-level=critical
+
+  secrets-scan:
+    name: Security — Secrets Scan (Gitleaks)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # ── E2E ────────────────────────────────────────────────────────────────────
+  e2e:
+    name: E2E — Playwright
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npx playwright test
+        env:
+          NEXT_PUBLIC_API_URL: http://localhost:8000
+
+  # ── AI PR Review ───────────────────────────────────────────────────────────
+  ai-review:
+    name: AI — PR Review (Claude)
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: anthropics/claude-code-action@beta
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+
+  # ── Deploy ─────────────────────────────────────────────────────────────────
+  deploy-preview:
+    name: Deploy — Vercel Preview
+    runs-on: ubuntu-latest
+    needs: [backend-tests, frontend-lint, frontend-typecheck, frontend-tests, security-scan]
+    if: github.event_name == 'pull_request'
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: npm install -g vercel
+      - run: vercel deploy --token=${{ secrets.VERCEL_TOKEN }} --yes
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+  deploy-production:
+    name: Deploy — Vercel Production
+    runs-on: ubuntu-latest
+    needs: [backend-tests, frontend-lint, frontend-typecheck, frontend-tests, security-scan]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: npm install -g vercel
+      - run: vercel deploy --prod --token=${{ secrets.VERCEL_TOKEN }} --yes
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}

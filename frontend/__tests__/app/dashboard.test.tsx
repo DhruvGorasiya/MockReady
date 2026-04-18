@@ -17,6 +17,14 @@ jest.mock("@/lib/api/sessions", () => ({
   getScoreTrends: jest.fn(),
 }));
 
+jest.mock("@/lib/auth/AuthContext", () => ({
+  useAuth: jest.fn(() => ({
+    token: "test-token",
+    isAuthenticated: true,
+    isLoading: false,
+  })),
+}));
+
 import * as sessionsApi from "@/lib/api/sessions";
 
 const mockGetSessionHistory = sessionsApi.getSessionHistory as jest.Mock;

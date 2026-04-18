@@ -1,5 +1,8 @@
 import asyncio
+import logging
+from collections.abc import Callable
 from datetime import datetime, timezone
+from typing import Any
 from uuid import UUID, uuid4
 
 from fastapi import HTTPException, status
@@ -8,6 +11,32 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from app.agents import answer_evaluation, feedback_synthesis, question_generation
+
+logger = logging.getLogger(__name__)
+
+
+async def _agent_call_with_retry(fn: Callable, *args: Any, **kwargs: Any) -> Any:
+    """Call an async agent function. Retry once on failure. Raise HTTP 502 on second failure."""
+    try:
+        return await fn(*args, **kwargs)
+    except Exception as first_exc:
+        logger.warning(
+            "Agent call failed, retrying once. agent=%s error=%s",
+            getattr(fn, "__name__", str(fn)),
+            str(first_exc),
+        )
+        try:
+            return await fn(*args, **kwargs)
+        except Exception as second_exc:
+            logger.error(
+                "Agent call failed on retry, aborting. agent=%s error=%s",
+                getattr(fn, "__name__", str(fn)),
+                str(second_exc),
+            )
+            raise HTTPException(
+                status_code=status.HTTP_502_BAD_GATEWAY,
+                detail="AI service temporarily unavailable. Please try again.",
+            ) from second_exc
 from app.models.evaluation_score import EvaluationScore, ScoredBy
 from app.models.question import Question, SessionQuestion
 from app.models.session import InterviewRole, InterviewType, Session, SessionStatus
@@ -26,6 +55,31 @@ from app.schemas.session import (
     TrendPoint,
     TrendResponse,
 )
+
+
+_EQUAL_WEIGHTS: dict[str, float] = {
+    "clarity": 0.2,
+    "depth": 0.2,
+    "structure": 0.2,
+    "relevance": 0.2,
+    "communication_quality": 0.2,
+}
+
+
+def _compute_weighted_composite(dims: DimensionScores, weights: dict | None) -> float:
+    """Compute a weighted composite score from dimension scores.
+
+    Falls back to equal weights (0.2 each) when no rubric weights are provided.
+    """
+    w = weights or _EQUAL_WEIGHTS
+    return round(
+        w.get("clarity", 0.2) * dims.clarity
+        + w.get("depth", 0.2) * dims.depth
+        + w.get("structure", 0.2) * dims.structure
+        + w.get("relevance", 0.2) * dims.relevance
+        + w.get("communication_quality", 0.2) * dims.communication_quality,
+        1,
+    )
 
 
 def _authoritative_score(scores: list[EvaluationScore]) -> EvaluationScore | None:
@@ -227,14 +281,17 @@ async def create_session_with_questions(
     db: AsyncSession, candidate_id: UUID, request: CreateSessionRequest
 ) -> SessionCreatedResponse:
     """Generate questions via AI and create a new session in in_progress state."""
-    raw_questions = await question_generation.generate_questions(
+    raw_questions = await _agent_call_with_retry(
+        question_generation.generate_questions,
         interview_type=request.interview_type.value,
         role=request.role.value,
         question_count=request.question_count,
     )
 
-    # Create Session
+    # Create Session — assign ID upfront so it's available without a DB round-trip
+    session_id = uuid4()
     session = Session(
+        id=session_id,
         candidate_id=candidate_id,
         interview_type=request.interview_type,
         role=request.role,
@@ -242,31 +299,31 @@ async def create_session_with_questions(
         started_at=datetime.now(timezone.utc),
     )
     db.add(session)
-    await db.flush()  # get session.id without committing
 
     questions_out: list[QuestionInSession] = []
     for idx, q in enumerate(raw_questions):
         text = q.get("text", "")
         # Persist the question to satisfy the FK constraint
         question_row = Question(
+            id=uuid4(),
             text=text,
             interview_type=request.interview_type.value,
             role=request.role.value,
         )
         db.add(question_row)
-        await db.flush()
 
+        sq_id = uuid4()
         sq = SessionQuestion(
-            session_id=session.id,
+            id=sq_id,
+            session_id=session_id,
             question_id=question_row.id,
             question_text=text,  # snapshot
             order_index=idx,
         )
         db.add(sq)
-        await db.flush()
 
         questions_out.append(
-            QuestionInSession(id=sq.id, question_text=text, order_index=idx)
+            QuestionInSession(id=sq_id, question_text=text, order_index=idx)
         )
 
     await db.commit()
@@ -288,11 +345,14 @@ async def submit_answer(
     answer: str,
 ) -> AnswerFeedbackResponse:
     """Save answer, run evaluation + feedback agents in parallel, persist score."""
-    # Load session with questions
+    # Load session with questions and rubric version for weighted scoring
     stmt = (
         select(Session)
         .where(Session.id == session_id, Session.candidate_id == candidate_id)
-        .options(selectinload(Session.questions).selectinload(SessionQuestion.evaluation_scores))
+        .options(
+            selectinload(Session.questions).selectinload(SessionQuestion.evaluation_scores),
+            selectinload(Session.rubric_version),
+        )
     )
     result = await db.execute(stmt)
     session = result.scalar_one_or_none()
@@ -313,18 +373,20 @@ async def submit_answer(
     sq.submitted_at = datetime.now(timezone.utc)
     await db.flush()
 
-    # Run evaluation and feedback agents in parallel
+    # Run evaluation and feedback agents in parallel, each with retry
     eval_result, feedback_result = await asyncio.gather(
-        answer_evaluation.evaluate_answer(
+        _agent_call_with_retry(
+            answer_evaluation.evaluate_answer,
             question=sq.question_text,
             answer=answer,
             interview_type=session.interview_type.value,
             role=session.role.value,
         ),
-        feedback_synthesis.synthesize_feedback(
+        _agent_call_with_retry(
+            feedback_synthesis.synthesize_feedback,
             question=sq.question_text,
             answer=answer,
-            scores={},  # will be filled after eval; feedback agent re-prompts with context
+            scores={},
             reasoning={},
             interview_type=session.interview_type.value,
             role=session.role.value,
@@ -338,11 +400,8 @@ async def submit_answer(
         relevance=eval_result["relevance"],
         communication_quality=eval_result["communication_quality"],
     )
-    composite = round(
-        (scores.clarity + scores.depth + scores.structure + scores.relevance + scores.communication_quality)
-        / 5,
-        1,
-    )
+    rubric_weights = session.rubric_version.weights if session.rubric_version else None
+    composite = _compute_weighted_composite(scores, rubric_weights)
 
     evaluation_score = EvaluationScore(
         session_question_id=sq.id,

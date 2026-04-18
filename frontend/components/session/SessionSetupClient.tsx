@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createSession } from "@/lib/api/sessions";
+import { useAuth } from "@/lib/auth/AuthContext";
 import type { InterviewType, InterviewRole } from "@/lib/types/session";
 
 const INTERVIEW_TYPES: { value: InterviewType; label: string }[] = [
@@ -19,6 +20,7 @@ const ROLES: { value: InterviewRole; label: string }[] = [
 
 export default function SessionSetupClient() {
   const router = useRouter();
+  const { token } = useAuth();
   const [interviewType, setInterviewType] = useState<InterviewType | "">("");
   const [role, setRole] = useState<InterviewRole | "">("");
   const [loading, setLoading] = useState(false);
@@ -27,13 +29,16 @@ export default function SessionSetupClient() {
   const canStart = interviewType !== "" && role !== "";
 
   async function handleStart() {
-    if (!canStart) return;
+    if (!canStart || !token) return;
     setLoading(true);
     setError(null);
     try {
-      const token = process.env.NEXT_PUBLIC_API_TOKEN ?? "";
       const session = await createSession(
-        { interview_type: interviewType, role: role as InterviewRole, question_count: 3 },
+        {
+          interview_type: interviewType,
+          role: role as InterviewRole,
+          question_count: 3,
+        },
         token,
       );
       router.push(`/sessions/${session.id}/interview`);
@@ -45,14 +50,18 @@ export default function SessionSetupClient() {
 
   return (
     <div className="mx-auto max-w-lg px-4 py-16">
-      <h1 className="text-2xl font-bold text-gray-900 mb-2">Start a Practice Session</h1>
+      <h1 className="text-2xl font-bold text-gray-900 mb-2">
+        Start a Practice Session
+      </h1>
       <p className="text-gray-500 mb-10 text-sm">
         Choose your interview type and target role to get relevant questions.
       </p>
 
       {/* Interview Type */}
       <div className="mb-8">
-        <p className="text-sm font-semibold text-gray-700 mb-3">Interview Type</p>
+        <p className="text-sm font-semibold text-gray-700 mb-3">
+          Interview Type
+        </p>
         <div className="grid grid-cols-3 gap-3">
           {INTERVIEW_TYPES.map((t) => (
             <button

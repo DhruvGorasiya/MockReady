@@ -1,3 +1,4 @@
+import logging
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, status
@@ -19,7 +20,8 @@ async def register(
         return await auth_service.register_user(db, body)
     except HTTPException:
         raise
-    except Exception:
+    except Exception as exc:
+        logging.getLogger(__name__).exception("Registration failed: %s", exc)
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail="Registration unavailable. Please try again later.",

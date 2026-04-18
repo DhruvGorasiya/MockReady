@@ -8,7 +8,7 @@ Last updated: 2026-04-17
 
 | Requirement | Status | Notes |
 |---|---|---|
-| **CLAUDE.md with `@imports`** | Partial | Exists, comprehensive — but no `@imports` for modular organization |
+| **CLAUDE.md with `@imports`** | Yes ✓ | Split into 6 modular docs files, root CLAUDE.md uses `@imports` |
 | **Auto-memory system** | Yes ✓ | `.claude/MEMORY.md` index + 7 memory files created |
 | **2+ Custom Skills** | Yes ✓ | `review-endpoint` (v1→v2) + `create-pr` (C.L.E.A.R. + AI disclosure) |
 | **2+ Hooks (PreToolUse/PostToolUse + Stop)** | Yes ✓ | PostToolUse (ruff lint on .py edit) + Stop (pytest gate) |
@@ -52,8 +52,8 @@ Last updated: 2026-04-17
 ### Medium Priority
 
 - [x] **Claude Code Agents** — `security-reviewer` agent (OWASP Top 10 audit)
-- [ ] **`CLAUDE.md` `@imports`** — split into modular files and use `@docs/conventions.md` etc.
-- [ ] **OWASP Top 10** section added to `CLAUDE.md`
+- [x] **`CLAUDE.md` `@imports`** — split into 6 modular files under `docs/`, root uses `@imports` ✓ DONE
+- [x] **OWASP Top 10** section added to `docs/security.md` (A01–A10 with MockReady-specific guidance) ✓ DONE
 - [ ] **Security tooling** — gitleaks pre-commit config, `npm audit` in CI
 
 ### Documentation / Process

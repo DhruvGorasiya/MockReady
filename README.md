@@ -39,31 +39,24 @@ MockReady addresses a gap that existing tools like Leetcode, Pramp, and ChatGPT 
 
 ```mermaid
 flowchart TD
-    Candidate --> Frontend
-    Coach --> Frontend
-    Frontend -->|REST API + JWT| Routes
+    A[Candidate] --> D[Next.js Frontend]
+    B[Coach] --> D
 
-    subgraph Backend
-        Routes[FastAPI Routes] --> Services
-        Services[Services Layer] --> Agents
-        Services --> DB
-        Agents[AI Agents] --> Claude[Anthropic Claude API]
-    end
+    D -->|REST API + JWT| E[FastAPI Routes]
+    E -->|validates token| F[Supabase Auth]
+    E --> G[Services Layer]
 
-    subgraph Agents
-        QGen[Question Generation]
-        Eval[Answer Evaluation]
-        Feedback[Feedback Synthesis]
-    end
+    G --> H[Question Generation Agent]
+    G --> I[Answer Evaluation Agent]
+    G --> J[Feedback Synthesis Agent]
 
-    Services -->|asyncio.gather| Eval
-    Services -->|asyncio.gather| Feedback
-    Services --> QGen
+    H --> K[Anthropic Claude API]
+    I --> K
+    J --> K
 
-    DB[SQLAlchemy ORM] --> Supabase[(Supabase PostgreSQL)]
-    Routes -->|JWT validation| Auth[Supabase Auth]
+    G --> L[SQLAlchemy ORM]
+    L --> M[(Supabase PostgreSQL)]
 ```
-
 ---
 
 ## Repository Structure

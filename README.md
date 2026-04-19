@@ -38,71 +38,30 @@ MockReady addresses a gap that existing tools like Leetcode, Pramp, and ChatGPT 
 ## Architecture Diagram
 
 ```mermaid
-graph TD
-    subgraph Frontend ["Frontend (Next.js 14)"]
-        A[Candidate UI] 
-        B[Coach UI]
-        C[Auth Pages]
+flowchart TD
+    Candidate --> Frontend
+    Coach --> Frontend
+    Frontend -->|REST API + JWT| Routes
+
+    subgraph Backend
+        Routes[FastAPI Routes] --> Services
+        Services[Services Layer] --> Agents
+        Services --> DB
+        Agents[AI Agents] --> Claude[Anthropic Claude API]
     end
 
-    subgraph Backend ["Backend (FastAPI)"]
-        D[Auth Routes]
-        E[Session Routes]
-        F[Coach Routes]
-        G[get_current_user dependency]
-
-        subgraph Services ["Services Layer"]
-            H[auth_service]
-            I[session_service]
-            J[coach_service]
-        end
-
-        subgraph Agents ["AI Agents"]
-            K[Question Generation Agent]
-            L[Answer Evaluation Agent]
-            M[Feedback Synthesis Agent]
-        end
+    subgraph Agents
+        QGen[Question Generation]
+        Eval[Answer Evaluation]
+        Feedback[Feedback Synthesis]
     end
 
-    subgraph Data ["Data Layer"]
-        N[Supabase PostgreSQL]
-        O[SQLAlchemy ORM]
-        P[Alembic Migrations]
-    end
+    Services -->|asyncio.gather| Eval
+    Services -->|asyncio.gather| Feedback
+    Services --> QGen
 
-    subgraph External ["External Services"]
-        Q[Anthropic Claude API]
-        R[Supabase Auth JWT]
-    end
-
-    A -->|REST API| E
-    B -->|REST API| F
-    C -->|REST API| D
-
-    D --> G
-    E --> G
-    F --> G
-
-    D --> H
-    E --> I
-    F --> J
-
-    I -->|session start| K
-    I -->|asyncio.gather| L
-    I -->|asyncio.gather| M
-
-    K --> Q
-    L --> Q
-    M --> Q
-
-    H --> O
-    I --> O
-    J --> O
-
-    O --> N
-    P --> N
-
-    G --> R
+    DB[SQLAlchemy ORM] --> Supabase[(Supabase PostgreSQL)]
+    Routes -->|JWT validation| Auth[Supabase Auth]
 ```
 
 ---

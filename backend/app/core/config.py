@@ -12,7 +12,11 @@ class Settings(BaseSettings):
     supabase_jwt_secret: str = "changeme"
     anthropic_api_key: str = ""
     claude_model: str = "claude-sonnet-4-6"
-    cors_origins: list[str] = ["http://localhost:3000", "https://mock-ready-git-main-dhruvgorasiyas-projects.vercel.app"]
+    cors_origins: list[str] = [
+        "http://localhost:3000",
+        "https://mock-ready-inky.vercel.app",
+        "https://mock-ready-git-main-dhruvgorasiyas-projects.vercel.app",
+    ]
     dev_bypass_auth: bool = False
     dev_bypass_user_id: str = "00000000-0000-0000-0000-000000000001"
 

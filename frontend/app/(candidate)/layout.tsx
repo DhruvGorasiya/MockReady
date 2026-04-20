@@ -38,12 +38,20 @@ export default function CandidateLayout({
           <a href="/dashboard" className="text-sm font-bold text-indigo-600">
             MockReady
           </a>
-          <button
-            onClick={logout}
-            className="rounded-md border border-gray-300 px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50 transition-colors"
-          >
-            Log out
-          </button>
+          <div className="flex items-center gap-3">
+            <a
+              href="/sessions/new"
+              className="rounded-md bg-indigo-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-indigo-700 transition-colors"
+            >
+              New Session
+            </a>
+            <button
+              onClick={logout}
+              className="rounded-md border border-gray-300 px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50 transition-colors"
+            >
+              Log out
+            </button>
+          </div>
         </div>
       </nav>
       <main>{children}</main>

@@ -126,6 +126,74 @@ def test_register_503_on_db_error(client):
     assert response.status_code == 503
 
 
+def test_register_as_coach_when_role_coach_supplied(client):
+    """role=coach in the request body should create a coach user."""
+    coach_response = UserResponse(
+        id=uuid4(),
+        email="new-coach@example.com",
+        role=UserRole.coach,
+        created_at=datetime(2026, 1, 1, tzinfo=timezone.utc),
+    )
+
+    with patch(
+        "app.api.v1.auth.auth_service.register_user",
+        new_callable=AsyncMock,
+    ) as mock_register:
+        mock_register.return_value = coach_response
+
+        response = client.post(
+            "/api/v1/auth/register",
+            json={
+                "email": "new-coach@example.com",
+                "password": "Secure1pass",
+                "role": "coach",
+            },
+        )
+
+    assert response.status_code == 201
+    assert response.json()["role"] == "coach"
+    # Service must receive the role on the request object
+    mock_register.assert_awaited_once()
+    request_arg = mock_register.await_args.args[1]
+    assert request_arg.role == UserRole.coach
+
+
+def test_register_defaults_to_candidate_when_role_omitted(client):
+    """Backwards compatibility: omitting role yields a candidate."""
+    candidate_response = _make_user_response()
+
+    with patch(
+        "app.api.v1.auth.auth_service.register_user",
+        new_callable=AsyncMock,
+    ) as mock_register:
+        mock_register.return_value = candidate_response
+
+        response = client.post(
+            "/api/v1/auth/register",
+            json={"email": "candidate@example.com", "password": "Secure1pass"},
+        )
+
+    assert response.status_code == 201
+    assert response.json()["role"] == "candidate"
+    mock_register.assert_awaited_once()
+    request_arg = mock_register.await_args.args[1]
+    # Default on the request schema must be candidate (or None resolved to candidate by the service).
+    assert request_arg.role in (UserRole.candidate, None)
+
+
+def test_register_rejects_admin_role(client):
+    """Admin accounts must not be creatable via the public register endpoint."""
+    response = client.post(
+        "/api/v1/auth/register",
+        json={
+            "email": "hacker@example.com",
+            "password": "Secure1pass",
+            "role": "admin",
+        },
+    )
+    assert response.status_code == 422
+
+
 # ---------------------------------------------------------------------------
 # POST /api/v1/auth/login
 # ---------------------------------------------------------------------------

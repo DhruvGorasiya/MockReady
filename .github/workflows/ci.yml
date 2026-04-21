@@ -140,23 +140,8 @@ jobs:
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
 
-  # ── Deploy ─────────────────────────────────────────────────────────────────
-  deploy-preview:
-    name: Deploy — Vercel Preview
-    runs-on: ubuntu-latest
-    needs: [backend-tests, frontend-lint, frontend-typecheck, frontend-tests, security-scan]
-    if: github.event_name == 'pull_request'
-    defaults:
-      run:
-        working-directory: frontend
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-      - run: npm install -g vercel
-      - run: vercel deploy --token=${{ secrets.VERCEL_TOKEN }} --yes
-        env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+  # Preview deploys are handled by the Vercel GitHub App (see the "Vercel"
+  # check on every PR). A parallel CLI-based deploy step used to live here
+  # but was redundant and required a VERCEL_TOKEN secret the repo never
+  # provisioned, so it failed on every PR where GitHub did not skip it.
 

@@ -135,6 +135,7 @@ export default function CoachSessionReviewPage({ params }: Props) {
           Override Scores
         </p>
         <CoachScoreForm
+          key={question.id}
           sessionId={sessionId}
           question={question}
           onScoreSubmitted={handleScoreSubmitted}

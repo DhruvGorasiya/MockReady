@@ -225,7 +225,7 @@ def _make_auth_app(current_user: User | None) -> FastAPI:
     from app.core.security import get_current_user
 
     test_app = FastAPI()
-    test_app.include_router(auth_router_module.router, prefix="/api/v1/auth")
+    test_app.include_router(auth_router_module.router, prefix="/api/v1")
 
     async def _override_db():
         yield AsyncMock()

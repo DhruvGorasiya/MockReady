@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth/AuthContext";
-import { getSessionDetail } from "@/lib/api/sessions";
+import { getCoachSessionDetail } from "@/lib/api/coach";
 import CoachScoreForm from "@/components/coach/CoachScoreForm";
 import type { QuestionResult, SessionDetail } from "@/lib/types/session";
 
@@ -23,7 +23,7 @@ export default function CoachSessionReviewPage({ params }: Props) {
 
   useEffect(() => {
     if (!token) return;
-    getSessionDetail(sessionId, token)
+    getCoachSessionDetail(sessionId, token)
       .then((detail) => setState({ status: "ok", detail }))
       .catch((err: unknown) =>
         setState({

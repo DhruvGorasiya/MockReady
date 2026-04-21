@@ -1,6 +1,7 @@
 import { apiFetch } from "@/lib/api/client";
 import type {
   QuestionResult,
+  SessionDetail,
   SessionHistoryResponse,
 } from "@/lib/types/session";
 
@@ -21,6 +22,13 @@ export async function getSessionsForReview(
   token: string,
 ): Promise<SessionHistoryResponse> {
   return apiFetch<SessionHistoryResponse>(`${BASE}/sessions`, {}, token);
+}
+
+export async function getCoachSessionDetail(
+  sessionId: string,
+  token: string,
+): Promise<SessionDetail> {
+  return apiFetch<SessionDetail>(`${BASE}/sessions/${sessionId}`, {}, token);
 }
 
 export async function submitCoachScore(

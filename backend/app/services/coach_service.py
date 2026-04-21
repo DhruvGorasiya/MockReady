@@ -11,6 +11,7 @@ from app.models.session import Session, SessionStatus
 from app.schemas.session import (
     DimensionScores,
     QuestionResult,
+    SessionDetail,
     SessionHistoryResponse,
     SessionSummary,
 )
@@ -82,6 +83,15 @@ async def submit_coach_score(
     await db.commit()
 
     return _build_question_result(sq)
+
+
+async def get_session_detail_as_coach(
+    db: AsyncSession, session_id: UUID
+) -> "SessionDetail":
+    """Stub — green phase will implement. Unlike the candidate-scoped version,
+    this fetches a session by id without filtering on candidate_id, since
+    coaches audit sessions belonging to other users."""
+    raise NotImplementedError
 
 
 async def list_sessions_for_review(db: AsyncSession) -> SessionHistoryResponse:

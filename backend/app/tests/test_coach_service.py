@@ -257,6 +257,29 @@ async def test_list_sessions_for_review_returns_empty_when_all_reviewed():
     assert response.sessions == []
 
 
+@pytest.mark.asyncio
+async def test_list_sessions_for_review_filters_to_completed_status():
+    """Coach queue must filter WHERE status == 'completed'.
+
+    Regression guard: the previous test mocks the DB result directly and
+    therefore passes even if the WHERE clause is dropped or changed. This
+    test introspects the compiled SQL so a refactor that loses the filter
+    fails loudly.
+    """
+    db = AsyncMock()
+    result_mock = MagicMock()
+    result_mock.scalars.return_value.all.return_value = []
+    db.execute = AsyncMock(return_value=result_mock)
+
+    await list_sessions_for_review(db)
+
+    db.execute.assert_awaited_once()
+    stmt = db.execute.await_args.args[0]
+    where_clause = str(stmt.whereclause.compile(compile_kwargs={"literal_binds": True}))
+    assert "sessions.status" in where_clause
+    assert "completed" in where_clause
+
+
 # ---------------------------------------------------------------------------
 # get_session_detail_as_coach
 # ---------------------------------------------------------------------------

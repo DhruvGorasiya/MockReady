@@ -175,9 +175,9 @@ describe("RegisterPage", () => {
   it("redirects coach to /review after successful registration", async () => {
     setSearchParam("role", "coach");
     const mockPush = jest.fn();
-    (jest.requireMock("next/navigation").useRouter as jest.Mock).mockReturnValue(
-      { push: mockPush, replace: jest.fn() },
-    );
+    (
+      jest.requireMock("next/navigation").useRouter as jest.Mock
+    ).mockReturnValue({ push: mockPush, replace: jest.fn() });
     const mockRegister = jest.fn().mockResolvedValue({
       id: "c1",
       email: "coach@test.com",

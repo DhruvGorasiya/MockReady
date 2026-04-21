@@ -11,8 +11,7 @@ function RegisterForm() {
   const { register } = useAuth();
   const searchParams = useSearchParams();
   const requestedRole = searchParams.get("role");
-  const role: UserRole =
-    requestedRole === "coach" ? "coach" : "candidate";
+  const role: UserRole = requestedRole === "coach" ? "coach" : "candidate";
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

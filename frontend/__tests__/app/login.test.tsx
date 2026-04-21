@@ -72,9 +72,9 @@ describe("LoginPage", () => {
 
   it("redirects coach users to /review after login", async () => {
     const mockPush = jest.fn();
-    (jest.requireMock("next/navigation").useRouter as jest.Mock).mockReturnValue(
-      { push: mockPush, replace: jest.fn() },
-    );
+    (
+      jest.requireMock("next/navigation").useRouter as jest.Mock
+    ).mockReturnValue({ push: mockPush, replace: jest.fn() });
     const mockLogin = jest.fn().mockResolvedValue({
       id: "c1",
       email: "coach@test.com",
@@ -103,9 +103,9 @@ describe("LoginPage", () => {
 
   it("redirects candidate users to /dashboard after login", async () => {
     const mockPush = jest.fn();
-    (jest.requireMock("next/navigation").useRouter as jest.Mock).mockReturnValue(
-      { push: mockPush, replace: jest.fn() },
-    );
+    (
+      jest.requireMock("next/navigation").useRouter as jest.Mock
+    ).mockReturnValue({ push: mockPush, replace: jest.fn() });
     const mockLogin = jest.fn().mockResolvedValue({
       id: "u1",
       email: "user@test.com",

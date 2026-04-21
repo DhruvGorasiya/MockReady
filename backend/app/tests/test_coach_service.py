@@ -286,9 +286,9 @@ async def test_get_session_detail_as_coach_returns_detail_regardless_of_candidat
     # Verify the SQL filter: session_id only, NOT candidate_id
     db.execute.assert_awaited_once()
     stmt = db.execute.await_args.args[0]
-    compiled = str(stmt.compile(compile_kwargs={"literal_binds": False}))
-    assert "sessions.id" in compiled
-    assert "candidate_id" not in compiled
+    where_clause = str(stmt.whereclause.compile(compile_kwargs={"literal_binds": False}))
+    assert "sessions.id" in where_clause
+    assert "candidate_id" not in where_clause
 
 
 @pytest.mark.asyncio

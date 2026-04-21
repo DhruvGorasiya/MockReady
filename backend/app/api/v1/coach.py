@@ -8,7 +8,7 @@ from app.core.db import get_db
 from app.core.security import get_current_user
 from app.models.user import User, UserRole
 from app.schemas.coach import CoachScoreRequest
-from app.schemas.session import QuestionResult, SessionHistoryResponse
+from app.schemas.session import QuestionResult, SessionDetail, SessionHistoryResponse
 from app.services import coach_service
 
 router = APIRouter(tags=["coach"])
@@ -59,3 +59,12 @@ async def get_sessions_for_review(
     db: Annotated[AsyncSession, Depends(get_db)],
 ) -> SessionHistoryResponse:
     return await coach_service.list_sessions_for_review(db)
+
+
+@router.get("/sessions/{session_id}", response_model=SessionDetail)
+async def get_session_detail_for_coach(
+    session_id: UUID,
+    current_user: Annotated[User, Depends(_require_coach)],
+    db: Annotated[AsyncSession, Depends(get_db)],
+) -> SessionDetail:
+    return await coach_service.get_session_detail_as_coach(db, session_id=session_id)

@@ -38,7 +38,7 @@ async def register_user(db: AsyncSession, request: RegisterRequest) -> UserRespo
     user = User(
         email=request.email,
         password_hash=_hash_password(request.password),
-        role=UserRole.candidate,
+        role=request.role,
     )
     db.add(user)
     await db.commit()

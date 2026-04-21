@@ -1,13 +1,18 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { Suspense, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/lib/auth/AuthContext";
+import type { UserRole } from "@/lib/api/auth";
 
-export default function RegisterPage() {
+function RegisterForm() {
   const router = useRouter();
   const { register } = useAuth();
+  const searchParams = useSearchParams();
+  const requestedRole = searchParams.get("role");
+  const role: UserRole = requestedRole === "coach" ? "coach" : "candidate";
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
@@ -25,8 +30,9 @@ export default function RegisterPage() {
 
     setLoading(true);
     try {
-      await register(email, password);
-      router.push("/dashboard");
+      const user = await register(email, password, role);
+      const destination = user.role === "coach" ? "/review" : "/dashboard";
+      router.push(destination);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Registration failed");
     } finally {
@@ -37,9 +43,19 @@ export default function RegisterPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
       <div className="w-full max-w-sm">
-        <h1 className="mb-8 text-2xl font-bold text-gray-900">
-          Create your account
-        </h1>
+        <div className="mb-8 flex items-center gap-3">
+          <h1 className="text-2xl font-bold text-gray-900">
+            Create your account
+          </h1>
+          {role === "coach" && (
+            <span
+              data-testid="coach-role-badge"
+              className="rounded-full bg-purple-100 px-2.5 py-0.5 text-xs font-medium text-purple-700"
+            >
+              Registering as Coach
+            </span>
+          )}
+        </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
@@ -119,5 +135,13 @@ export default function RegisterPage() {
         </p>
       </div>
     </div>
+  );
+}
+
+export default function RegisterPage() {
+  return (
+    <Suspense fallback={null}>
+      <RegisterForm />
+    </Suspense>
   );
 }

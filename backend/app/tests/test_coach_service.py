@@ -13,7 +13,11 @@ from fastapi import HTTPException
 from app.models.evaluation_score import EvaluationScore, ScoredBy
 from app.models.question import SessionQuestion
 from app.models.session import InterviewRole, InterviewType, Session, SessionStatus
-from app.services.coach_service import list_sessions_for_review, submit_coach_score
+from app.services.coach_service import (
+    get_session_detail_as_coach,
+    list_sessions_for_review,
+    submit_coach_score,
+)
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -251,3 +255,73 @@ async def test_list_sessions_for_review_returns_empty_when_all_reviewed():
 
     assert response.total == 0
     assert response.sessions == []
+
+
+@pytest.mark.asyncio
+async def test_list_sessions_for_review_filters_to_completed_status():
+    """Coach queue must filter WHERE status == 'completed'.
+
+    Regression guard: the previous test mocks the DB result directly and
+    therefore passes even if the WHERE clause is dropped or changed. This
+    test introspects the compiled SQL so a refactor that loses the filter
+    fails loudly.
+    """
+    db = AsyncMock()
+    result_mock = MagicMock()
+    result_mock.scalars.return_value.all.return_value = []
+    db.execute = AsyncMock(return_value=result_mock)
+
+    await list_sessions_for_review(db)
+
+    db.execute.assert_awaited_once()
+    stmt = db.execute.await_args.args[0]
+    where_clause = str(stmt.whereclause.compile(compile_kwargs={"literal_binds": True}))
+    assert "sessions.status" in where_clause
+    assert "completed" in where_clause
+
+
+# ---------------------------------------------------------------------------
+# get_session_detail_as_coach
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.asyncio
+async def test_get_session_detail_as_coach_returns_detail_regardless_of_candidate():
+    """Coach service returns any session; query MUST NOT be scoped by candidate_id."""
+    from app.schemas.session import SessionDetail
+
+    # Session belongs to a candidate that is NOT the coach
+    session = _make_session(candidate_id=uuid4())
+    sq = _make_sq(session.id, has_ai_score=True, has_coach_score=False)
+    session.questions = [sq]
+
+    db = AsyncMock()
+    result_mock = MagicMock()
+    result_mock.scalar_one_or_none.return_value = session
+    db.execute = AsyncMock(return_value=result_mock)
+
+    detail = await get_session_detail_as_coach(db, session_id=session.id)
+
+    assert isinstance(detail, SessionDetail)
+    assert detail.id == session.id
+    assert len(detail.questions) == 1
+
+    # Verify the SQL filter: session_id only, NOT candidate_id
+    db.execute.assert_awaited_once()
+    stmt = db.execute.await_args.args[0]
+    where_clause = str(stmt.whereclause.compile(compile_kwargs={"literal_binds": False}))
+    assert "sessions.id" in where_clause
+    assert "candidate_id" not in where_clause
+
+
+@pytest.mark.asyncio
+async def test_get_session_detail_as_coach_raises_404_when_missing():
+    db = AsyncMock()
+    result_mock = MagicMock()
+    result_mock.scalar_one_or_none.return_value = None
+    db.execute = AsyncMock(return_value=result_mock)
+
+    with pytest.raises(HTTPException) as exc_info:
+        await get_session_detail_as_coach(db, session_id=uuid4())
+
+    assert exc_info.value.status_code == 404

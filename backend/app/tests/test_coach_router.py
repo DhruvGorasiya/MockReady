@@ -11,7 +11,13 @@ from fastapi.testclient import TestClient
 
 from app.api.v1 import coach as coach_router_module
 from app.models.user import User, UserRole
-from app.schemas.session import DimensionScores, QuestionResult, SessionHistoryResponse, SessionSummary
+from app.schemas.session import (
+    DimensionScores,
+    QuestionResult,
+    SessionDetail,
+    SessionHistoryResponse,
+    SessionSummary,
+)
 from app.models.session import InterviewType, InterviewRole, SessionStatus
 from datetime import datetime, timezone
 
@@ -170,3 +176,78 @@ def test_get_sessions_for_review_returns_403_for_candidate():
     resp = client.get("/api/v1/coach/sessions")
 
     assert resp.status_code == 403
+
+
+# ---------------------------------------------------------------------------
+# GET /coach/sessions/{session_id}
+# ---------------------------------------------------------------------------
+
+
+def _make_session_detail(session_id=None) -> SessionDetail:
+    return SessionDetail(
+        id=session_id or uuid4(),
+        interview_type=InterviewType.behavioral,
+        role=InterviewRole.SWE,
+        status=SessionStatus.completed,
+        composite_score=7.5,
+        created_at=datetime(2026, 1, 1, tzinfo=timezone.utc),
+        questions=[_QUESTION_RESULT],
+    )
+
+
+def test_get_coach_session_detail_returns_200_for_coach():
+    """Coach can fetch any session detail, even when the candidate is a different user."""
+    coach = _make_coach_user()
+    app = _make_app(coach)
+    client = TestClient(app)
+
+    session_id = uuid4()
+    detail = _make_session_detail(session_id=session_id)
+
+    with patch(
+        "app.api.v1.coach.coach_service.get_session_detail_as_coach",
+        new_callable=AsyncMock,
+    ) as mock_svc:
+        mock_svc.return_value = detail
+
+        resp = client.get(f"/api/v1/coach/sessions/{session_id}")
+
+    assert resp.status_code == 200
+    data = resp.json()
+    assert data["id"] == str(session_id)
+    assert data["questions"][0]["question_text"] == "Tell me about a project."
+    # Service must be called with session_id, NOT scoped by candidate_id
+    mock_svc.assert_awaited_once()
+    assert mock_svc.await_args.kwargs.get("session_id") == session_id
+
+
+def test_get_coach_session_detail_returns_403_for_candidate():
+    """A candidate must not be able to fetch arbitrary sessions via the coach endpoint."""
+    candidate = _make_candidate_user()
+    app = _make_app(candidate)
+    client = TestClient(app)
+
+    resp = client.get(f"/api/v1/coach/sessions/{uuid4()}")
+
+    assert resp.status_code == 403
+
+
+def test_get_coach_session_detail_returns_404_when_missing():
+    coach = _make_coach_user()
+    app = _make_app(coach)
+    client = TestClient(app)
+
+    from fastapi import HTTPException as _HE
+
+    with patch(
+        "app.api.v1.coach.coach_service.get_session_detail_as_coach",
+        new_callable=AsyncMock,
+    ) as mock_svc:
+        mock_svc.side_effect = _HE(status_code=404, detail="Session not found")
+
+        resp = client.get(f"/api/v1/coach/sessions/{uuid4()}")
+
+    assert resp.status_code == 404
+    # Ensure the service was actually invoked (guards against false-green where
+    # the route doesn't exist yet and FastAPI returns its own 404).
+    mock_svc.assert_awaited_once()

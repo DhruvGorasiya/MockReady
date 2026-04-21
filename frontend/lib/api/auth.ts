@@ -6,9 +6,12 @@ export interface LoginRequest {
   password: string;
 }
 
+export type UserRole = "candidate" | "coach" | "admin";
+
 export interface RegisterRequest {
   email: string;
   password: string;
+  role?: UserRole;
 }
 
 export interface TokenResponse {
@@ -51,4 +54,24 @@ export function login(body: LoginRequest): Promise<TokenResponse> {
 
 export function register(body: RegisterRequest): Promise<UserResponse> {
   return authFetch<UserResponse>("/api/v1/auth/register", body);
+}
+
+export async function getMe(token: string): Promise<UserResponse> {
+  const response = await fetch(`${API_BASE}/api/v1/auth/me`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  if (!response.ok) {
+    let detail = response.statusText;
+    try {
+      const json = await response.json();
+      const raw = json?.detail ?? detail;
+      detail = typeof raw === "string" ? raw : JSON.stringify(raw);
+    } catch {
+      // leave as statusText
+    }
+    throw new ApiError(response.status, detail);
+  }
+
+  return response.json() as Promise<UserResponse>;
 }

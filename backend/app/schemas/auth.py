@@ -9,6 +9,8 @@ from app.models.user import UserRole
 class RegisterRequest(BaseModel):
     email: EmailStr
     password: str = Field(..., min_length=8, max_length=128)
+    # Admin accounts are never creatable via the public register endpoint.
+    role: UserRole = UserRole.candidate
 
     @field_validator("password")
     @classmethod
@@ -17,6 +19,13 @@ class RegisterRequest(BaseModel):
             raise ValueError("Password must contain at least one uppercase letter.")
         if not any(c.isdigit() for c in v):
             raise ValueError("Password must contain at least one digit.")
+        return v
+
+    @field_validator("role")
+    @classmethod
+    def role_not_admin(cls, v: UserRole) -> UserRole:
+        if v == UserRole.admin:
+            raise ValueError("admin role cannot be assigned via registration.")
         return v
 
 

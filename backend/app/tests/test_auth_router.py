@@ -1,5 +1,5 @@
 """
-Tests for POST /api/v1/auth/register and POST /api/v1/auth/login route handlers.
+Tests for POST /api/v1/auth/register, POST /api/v1/auth/login, and GET /api/v1/auth/me.
 
 Service layer is mocked so no real DB or JWT is needed.
 """
@@ -8,11 +8,12 @@ from unittest.mock import AsyncMock, patch
 from uuid import uuid4
 
 import pytest
-from fastapi import HTTPException
+from fastapi import FastAPI, HTTPException
 from fastapi.testclient import TestClient
 
+from app.api.v1 import auth as auth_router_module
 from app.main import app
-from app.models.user import UserRole
+from app.models.user import User, UserRole
 from app.schemas.auth import TokenResponse, UserResponse
 
 
@@ -125,6 +126,74 @@ def test_register_503_on_db_error(client):
     assert response.status_code == 503
 
 
+def test_register_as_coach_when_role_coach_supplied(client):
+    """role=coach in the request body should create a coach user."""
+    coach_response = UserResponse(
+        id=uuid4(),
+        email="new-coach@example.com",
+        role=UserRole.coach,
+        created_at=datetime(2026, 1, 1, tzinfo=timezone.utc),
+    )
+
+    with patch(
+        "app.api.v1.auth.auth_service.register_user",
+        new_callable=AsyncMock,
+    ) as mock_register:
+        mock_register.return_value = coach_response
+
+        response = client.post(
+            "/api/v1/auth/register",
+            json={
+                "email": "new-coach@example.com",
+                "password": "Secure1pass",
+                "role": "coach",
+            },
+        )
+
+    assert response.status_code == 201
+    assert response.json()["role"] == "coach"
+    # Service must receive the role on the request object
+    mock_register.assert_awaited_once()
+    request_arg = mock_register.await_args.args[1]
+    assert request_arg.role == UserRole.coach
+
+
+def test_register_defaults_to_candidate_when_role_omitted(client):
+    """Backwards compatibility: omitting role yields a candidate."""
+    candidate_response = _make_user_response()
+
+    with patch(
+        "app.api.v1.auth.auth_service.register_user",
+        new_callable=AsyncMock,
+    ) as mock_register:
+        mock_register.return_value = candidate_response
+
+        response = client.post(
+            "/api/v1/auth/register",
+            json={"email": "candidate@example.com", "password": "Secure1pass"},
+        )
+
+    assert response.status_code == 201
+    assert response.json()["role"] == "candidate"
+    mock_register.assert_awaited_once()
+    request_arg = mock_register.await_args.args[1]
+    # Default on the request schema must be candidate (or None resolved to candidate by the service).
+    assert request_arg.role in (UserRole.candidate, None)
+
+
+def test_register_rejects_admin_role(client):
+    """Admin accounts must not be creatable via the public register endpoint."""
+    response = client.post(
+        "/api/v1/auth/register",
+        json={
+            "email": "hacker@example.com",
+            "password": "Secure1pass",
+            "role": "admin",
+        },
+    )
+    assert response.status_code == 422
+
+
 # ---------------------------------------------------------------------------
 # POST /api/v1/auth/login
 # ---------------------------------------------------------------------------
@@ -197,3 +266,79 @@ def test_login_503_on_db_error(client):
         )
 
     assert response.status_code == 503
+
+
+# ---------------------------------------------------------------------------
+# GET /api/v1/auth/me
+# ---------------------------------------------------------------------------
+
+
+def _make_user(role: UserRole = UserRole.candidate) -> User:
+    u = User()
+    u.id = uuid4()
+    u.email = f"{role.value}@test.com"
+    u.role = role
+    u.password_hash = "x"
+    u.created_at = datetime(2026, 1, 1, tzinfo=timezone.utc)
+    return u
+
+
+def _make_auth_app(current_user: User | None) -> FastAPI:
+    """Build a FastAPI app with the auth router mounted and get_current_user overridden.
+
+    Pass current_user=None to leave auth unmocked (used to assert the endpoint is
+    dependency-guarded).
+    """
+    from app.core.db import get_db
+    from app.core.security import get_current_user
+
+    test_app = FastAPI()
+    test_app.include_router(auth_router_module.router, prefix="/api/v1")
+
+    async def _override_db():
+        yield AsyncMock()
+
+    test_app.dependency_overrides[get_db] = _override_db
+
+    if current_user is not None:
+        async def _override_auth():
+            return current_user
+
+        test_app.dependency_overrides[get_current_user] = _override_auth
+
+    return test_app
+
+
+def test_me_returns_current_user_for_candidate():
+    user = _make_user(UserRole.candidate)
+    client = TestClient(_make_auth_app(user))
+
+    response = client.get("/api/v1/auth/me")
+
+    assert response.status_code == 200
+    data = response.json()
+    assert data["id"] == str(user.id)
+    assert data["email"] == user.email
+    assert data["role"] == "candidate"
+    assert "created_at" in data
+
+
+def test_me_returns_coach_role_for_coach_user():
+    user = _make_user(UserRole.coach)
+    client = TestClient(_make_auth_app(user))
+
+    response = client.get("/api/v1/auth/me")
+
+    assert response.status_code == 200
+    assert response.json()["role"] == "coach"
+
+
+def test_me_returns_401_without_auth():
+    test_app = _make_auth_app(current_user=None)
+    client = TestClient(test_app, raise_server_exceptions=False)
+
+    with patch("app.core.security.settings") as mock_settings:
+        mock_settings.dev_bypass_auth = False
+        response = client.get("/api/v1/auth/me")
+
+    assert response.status_code == 401

@@ -11,6 +11,7 @@ from app.models.session import Session, SessionStatus
 from app.schemas.session import (
     DimensionScores,
     QuestionResult,
+    SessionDetail,
     SessionHistoryResponse,
     SessionSummary,
 )
@@ -82,6 +83,43 @@ async def submit_coach_score(
     await db.commit()
 
     return _build_question_result(sq)
+
+
+async def get_session_detail_as_coach(
+    db: AsyncSession, session_id: UUID
+) -> SessionDetail:
+    """Return full session detail for coach review.
+
+    Unlike the candidate-facing version, the query is NOT scoped by
+    candidate_id: coaches audit sessions belonging to other users. Route-layer
+    role enforcement is the only gate.
+    """
+    stmt = (
+        select(Session)
+        .where(Session.id == session_id)
+        .options(
+            selectinload(Session.questions).selectinload(SessionQuestion.evaluation_scores)
+        )
+    )
+    result = await db.execute(stmt)
+    session = result.scalar_one_or_none()
+
+    if session is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Session not found")
+
+    questions = sorted(
+        [_build_question_result(sq) for sq in session.questions],
+        key=lambda q: q.order_index,
+    )
+    return SessionDetail(
+        id=session.id,
+        interview_type=session.interview_type,
+        role=session.role,
+        status=session.status,
+        composite_score=_composite_for_session(session),
+        created_at=session.created_at,
+        questions=questions,
+    )
 
 
 async def list_sessions_for_review(db: AsyncSession) -> SessionHistoryResponse:

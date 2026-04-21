@@ -70,6 +70,68 @@ describe("LoginPage", () => {
     });
   });
 
+  it("redirects coach users to /review after login", async () => {
+    const mockPush = jest.fn();
+    (jest.requireMock("next/navigation").useRouter as jest.Mock).mockReturnValue(
+      { push: mockPush, replace: jest.fn() },
+    );
+    const mockLogin = jest.fn().mockResolvedValue({
+      id: "c1",
+      email: "coach@test.com",
+      role: "coach",
+      created_at: "2026-01-01T00:00:00Z",
+    });
+    mockUseAuth.mockReturnValue({
+      isAuthenticated: false,
+      isLoading: false,
+      login: mockLogin,
+      register: jest.fn(),
+      logout: jest.fn(),
+      token: null,
+    });
+
+    render(<LoginPage />);
+
+    await userEvent.type(screen.getByLabelText(/email/i), "coach@test.com");
+    await userEvent.type(screen.getByLabelText(/password/i), "Password1");
+    await userEvent.click(screen.getByRole("button", { name: /log in/i }));
+
+    await waitFor(() => {
+      expect(mockPush).toHaveBeenCalledWith("/review");
+    });
+  });
+
+  it("redirects candidate users to /dashboard after login", async () => {
+    const mockPush = jest.fn();
+    (jest.requireMock("next/navigation").useRouter as jest.Mock).mockReturnValue(
+      { push: mockPush, replace: jest.fn() },
+    );
+    const mockLogin = jest.fn().mockResolvedValue({
+      id: "u1",
+      email: "user@test.com",
+      role: "candidate",
+      created_at: "2026-01-01T00:00:00Z",
+    });
+    mockUseAuth.mockReturnValue({
+      isAuthenticated: false,
+      isLoading: false,
+      login: mockLogin,
+      register: jest.fn(),
+      logout: jest.fn(),
+      token: null,
+    });
+
+    render(<LoginPage />);
+
+    await userEvent.type(screen.getByLabelText(/email/i), "user@test.com");
+    await userEvent.type(screen.getByLabelText(/password/i), "Password1");
+    await userEvent.click(screen.getByRole("button", { name: /log in/i }));
+
+    await waitFor(() => {
+      expect(mockPush).toHaveBeenCalledWith("/dashboard");
+    });
+  });
+
   it("shows an error message when login throws", async () => {
     const mockLogin = jest
       .fn()
